@@ -10,7 +10,7 @@ body {
 }
 
 h2 {
-    color: #4ca18d;
+    color: #58af9b;
     font-weight: 600;
     padding-bottom: 20px;
 }
@@ -40,16 +40,22 @@ h2 {
 }
 
 #start-button {
-    background-color: #58af9b;
-    color: white;
+    background-color: #58af9b; /* Cor de fundo inicial */
+    color: white; /* Cor do texto */
     padding: 10px 20px;
-    border: none;
+    border: 2px solid #58af9b; /* Bordas iguais ao fundo */
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 20px;
-    margin-top: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+    box-sizing: border-box;
 }
+
+#start-button:hover {
+    background-color: transparent; /* Faz o fundo ficar "vazado" */
+    color: #58af9b; /* Cor do texto igual à da borda */
+}
+
 
 #progress-container {
     width: 50%;

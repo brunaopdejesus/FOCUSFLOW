@@ -17,9 +17,11 @@
     <header>
         <div class="logo">
             <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+            <!-- <a href="./index.html"><img src="./ícone/verde_sem_subtitulo.png" alt="Logo"></a>  -->
         </div>
         <div class="nav-links">
-            <a href="{{ url_for('circuito') }}"><h2>Monitoramento do Ambiente</h2></a>
+            <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+            <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
             <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
             <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
         </div>
@@ -89,9 +91,6 @@
                 </section>
             </aside>            
         </main>
-        <footer>
-            <p>© 2024 FocusFlow | Todos os direitos reservados.</p>
-        </footer>
     </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     <!-- <script src="index.js"></script> -->

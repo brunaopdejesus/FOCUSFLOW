@@ -3,124 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/circuito.css') }}">
     <title>Monitoramento de Sensores</title>
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #58af9b; /* Azul escuro */
-            --secondary-color: #ffffff; /* Branco */
-            --text-color: rgb(65, 65, 65); /* Preto */
-            --card-background: #f4f4f4; /* Cor de fundo clara */
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--card-background);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-        }
-
-        .sensor-data {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            max-width: 1000px;
-        }
-
-        .sensor-box {
-            background-color: var(--secondary-color);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            flex: 1;
-            min-width: 200px;
-            max-width: 300px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .sensor-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .sensor-box h2 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .sensor-box p {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin: 0;
-        }
-
-        footer {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 20px;
-            text-align: center;
-            width: 100%;
-            font-size: 0.9rem;
-            margin-top: 30px;
-        }
-
-        @media (max-width: 768px) {
-            .sensor-box {
-                max-width: 90%;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-        }
-
-        .download-btn {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .download-btn a {
-            text-decoration: none; /* Remove o sublinhado do link */
-        }
-
-        .download-btn button {
-            background-color: var(--primary-color); /* Cor de fundo inicial */
-            color: white; /* Cor do texto */
-            padding: 10px 20px;
-            border: 2px solid var(--primary-color); /* Bordas iguais ao fundo */
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
-            box-sizing: border-box; /* Garante que padding e border não alterem o tamanho do botão */
-        }
-
-        .download-btn button:hover {
-            background-color: transparent; /* Faz o fundo ficar "vazado" */
-            color: var(--primary-color); /* Cor do texto igual à da borda */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Link para o arquivo CSS separado -->
 </head>
 <body>
-
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+            <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
+            <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
+            <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
+        </div>
+        <div class="user">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário"></a>
+        </div>
+    </header>
     <h1>Monitoramento de Sensores</h1>
 
     <div class="sensor-data">
@@ -162,6 +65,5 @@
         setInterval(fetchSensorData, 2000);
         fetchSensorData();
     </script>
-
 </body>
 </html>

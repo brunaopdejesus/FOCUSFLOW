@@ -15,9 +15,17 @@ sensor_data = {
 def index():
     return render_template('index.html')
 
-@app.route('/funcionario')
-def funcionario():
-    return render_template('funcionario.html')
+# @app.route('/funcionario')
+# def funcionario():
+#     return render_template('funcionario.html')
+
+@app.route('/funcionario/<nome>')
+def funcionario(nome):
+    # Aqui você pode carregar dados específicos do funcionário, se necessário
+    # Exemplo: buscar informações de um banco de dados ou arquivo
+    # Por enquanto, apenas renderize a página com o nome do funcionário
+    return render_template('funcionario.html', nome=nome)
+
 
 @app.route('/perfil')
 def perfil():

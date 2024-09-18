@@ -1,0 +1,318 @@
+/* Cores base */
+:root {
+    --primary-color: #58af9b; /* Azul escuro */
+    --secondary-color: #ffffff; /* Branco */
+    --text-color: rgb(65, 65, 65); /* Preto */
+    --card-background: #f4f4f4; /* Cor de fundo clara para contraste */
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.status-green {
+    background-color: green;
+}
+
+.status-yellow {
+    background-color: yellow;
+}
+
+.status-red {
+    background-color: red;
+}
+
+/* Ajustar a altura do container principal para ocupar a tela inteira */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Garante que o container ocupe pelo menos 100% da altura da tela */
+}
+
+main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* Adiciona a rolagem se o conteúdo for maior que a tela */
+}
+
+/* Garantir que os gráficos e listas não excedam a largura disponível */
+.charts {
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.chart-container, .employee-list {
+    max-width: calc(100% - 40px); /* Ajustar a largura máxima */
+}
+
+header {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: rgb(65, 65, 65);
+    width: 100%; /* Garante que o header ocupe 100% da largura da tela */
+    box-sizing: border-box; /* Inclui o padding e border no cálculo da largura */
+    position: fixed; /* Mantém o header fixo no topo da página */
+    top: 0; /* Alinha o header ao topo da página */
+    left: 0; /* Garante que o header esteja alinhado à esquerda */
+    z-index: 1000; /* Garante que o header esteja acima dos outros elementos */
+}
+
+.logo img {
+    height: 50px;
+}
+
+.nav-links a {
+    text-decoration: none; /* Remove a sublinha dos links */
+    color: inherit; /* Mantém a cor original do texto */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Remove a barra de rolagem horizontal */
+}
+
+.nav-links a h2 {
+    margin: 0;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: var(--text-color);
+}
+
+/* Efeito de cor ao passar o mouse */
+.nav-links a h2:hover {
+    color: #58af9b; /* Cor de destaque ao passar o mouse */
+}
+
+.nav-links {
+    display: flex;
+    margin-right: 3%;
+    gap: 2%;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.nav-links h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Torna a imagem redonda */
+    object-fit: cover; /* Ajusta a imagem dentro do círculo */
+}
+
+main {
+    padding: 20px;
+}
+
+.charts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    background: var(--secondary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    text-align: center;
+}
+
+h2 {
+    color: var(--primary-color);
+}
+
+.employee-list {
+    background: var(--secondary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.employee-list h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 10px;
+    border-bottom: 1px solid var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: #eaeaea;
+}
+
+footer {
+    background-color: var(--primary-color);
+    padding: 30px;
+    gap: 90px;
+    font-size: 15px;
+    color: white;
+    text-align: center;
+}
+
+.footer-social .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer-social .social-links a img {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) invert(1); /* Ícones em branco */
+    transition: transform 0.3s;
+}
+
+.footer-social .social-links a:hover img {
+    transform: scale(1.2); /* Efeito de zoom ao passar o mouse */
+}
+
+.footer-legal a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-legal a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding-top: 70px; /* Ajuste conforme a altura do header */
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.sensor-data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1000px;
+}
+
+.sensor-box {
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sensor-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sensor-box h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.sensor-box p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .sensor-box {
+        max-width: 90%;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+.download-btn {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.download-btn a {
+    text-decoration: none; /* Remove o sublinhado do link */
+}
+
+.download-btn button {
+    background-color: var(--primary-color); /* Cor de fundo inicial */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: 2px solid var(--primary-color); /* Bordas iguais ao fundo */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+    box-sizing: border-box; /* Garante que padding e border não alterem o tamanho do botão */
+}
+
+.download-btn button:hover {
+    background-color: transparent; /* Faz o fundo ficar "vazado" */
+    color: var(--primary-color); /* Cor do texto igual à da borda */
+}
