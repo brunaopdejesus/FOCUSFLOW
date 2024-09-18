@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Postura</title>
+    <link rel="shortcut icon" href="src/verde_sem_subtitulo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visao-computacional.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Análise de Postura com Visão Computacional</h2>
+        <div class="webcam-frame">
+            <canvas id="canvas"></canvas>
+        </div>
+        <button id="start-button" type="button" onclick="init()">Iniciar</button>
+        <div id="progress-container">
+            <!-- As barras de progresso e as classes irão aparecer aqui -->
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+    <script src="{{ url_for('static', filename='js/visao-computacional.js') }}"></script>
+    <!-- <script src="script.js"></script> -->
+</body>
+</html>
