@@ -1,5 +1,5 @@
 import csv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_file
 
 app = Flask(__name__)
 
@@ -15,17 +15,9 @@ sensor_data = {
 def index():
     return render_template('index.html')
 
-# @app.route('/funcionario')
-# def funcionario():
-#     return render_template('funcionario.html')
-
-@app.route('/funcionario/<nome>')
-def funcionario(nome):
-    # Aqui você pode carregar dados específicos do funcionário, se necessário
-    # Exemplo: buscar informações de um banco de dados ou arquivo
-    # Por enquanto, apenas renderize a página com o nome do funcionário
-    return render_template('funcionario.html', nome=nome)
-
+@app.route('/funcionario')
+def funcionario():
+    return render_template('funcionario.html')
 
 @app.route('/perfil')
 def perfil():
@@ -71,6 +63,12 @@ def atualizar_tabela():
         reader = csv.DictReader(file)
         dados = list(reader)[-1]  # Pegue a última linha, assumindo que ela tem os dados mais recentes
     return jsonify(dados)
+
+# Rota para download do arquivo CSV
+@app.route('/download')
+def download_file():
+    caminho_arquivo = 'dados_sensores.csv'  # Certifique-se de que o caminho está correto
+    return send_file(caminho_arquivo, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
