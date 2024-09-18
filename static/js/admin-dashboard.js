@@ -169,12 +169,15 @@ function formatTime(minutes) {
 // Função para popular a lista de funcionários
 function populateEmployeeList() {
     const employeeList = document.getElementById('employeeList');
+    
+    // Iterar sobre os dados dos funcionários
     for (const employee in employeeData) {
         const li = document.createElement('li');
         li.style.display = 'flex';
         li.style.justifyContent = 'space-between';
         li.style.alignItems = 'center';
         li.style.position = 'relative';
+        li.style.cursor = 'pointer'; // Adiciona um cursor de ponteiro para indicar que é clicável
 
         // Criar o nome do funcionário em um span
         const employeeName = document.createElement('span');
@@ -192,25 +195,41 @@ function populateEmployeeList() {
         statusIndicator.style.animation = 'blink 1s infinite';
 
         // Definir a cor inicial com base na lógica
-        const status = determineStatus(employee);
-        statusIndicator.style.backgroundColor = statusColors[status];
+        const status = determineStatus(employee); // Função que determina o status (presumido já implementada)
+        statusIndicator.style.backgroundColor = statusColors[status]; // statusColors contém as cores correspondentes
 
         li.appendChild(employeeName); // Adicionar o nome do funcionário
         li.appendChild(statusIndicator); // Adicionar a bolinha ao <li>
 
-        // Alterar cores para alguns funcionários, se necessário
+        // Lógica para alterar a cor das bolinhas se o status for crítico
         if (status === 'red' || status === 'yellow') {
             setInterval(() => {
                 const currentColor = statusIndicator.style.backgroundColor;
-                statusIndicator.style.backgroundColor = getNextColor(currentColor);
+                statusIndicator.style.backgroundColor = getNextColor(currentColor); // Alterna entre cores
             }, 5000);
         }
 
+        // Evento de clique no funcionário
         li.onclick = () => {
-            localStorage.setItem('selectedEmployee', employee);
-            window.location.href = 'funcionario.html';
+        fetch(`/funcionario/${employee}`, { method: 'GET' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = `/funcionario/${employee}`; // Redireciona para a rota correta
+                } else {
+                    console.error('Falha ao redirecionar para a página do funcionário.');
+                }
+            })
+            .catch(error => console.error('Erro:', error));
         };
-        employeeList.appendChild(li);
+
+
+        // // Evento de clique no funcionário
+        // li.onclick = () => {
+        //     localStorage.setItem('selectedEmployee', employee); // Armazena o nome do funcionário
+        //     window.location.href = 'funcionario.html'; // Redireciona para a página de detalhes do funcionário
+        // };
+
+        employeeList.appendChild(li); // Adicionar o <li> à lista de funcionários
     }
 }
 
