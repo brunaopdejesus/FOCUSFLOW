@@ -1,4 +1,4 @@
-const URL = "./my_model/";
+const URL = "/static/models/my_model/";
 let model, webcam, ctx, labelContainer, maxPredictions;
 
 async function init() {
