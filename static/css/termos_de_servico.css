@@ -1,0 +1,101 @@
+/* Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Estilos do Header */
+header {
+    background-color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+
+header nav ul {
+    list-style: none;
+}
+
+header nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+header nav ul li a {
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header nav ul li a:hover {
+    color: #58af9b;
+}
+
+/* Estilos da Seção de Termos */
+main {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #FFF;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.terms-section h1 {
+    color: #58af9b;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.terms-section h2 {
+    color: #58af9b;
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.terms-section p {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #555;
+}
+
+/* Estilos do Botão */
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #58af9b;
+    color: #FFF;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #58af9b;
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #58af9b;
+    color: white;
+    font-size: 14px;
+    margin-top: 50px;
+    position: relative;
+}

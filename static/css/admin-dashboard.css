@@ -11,6 +11,28 @@
     100% { opacity: 1; }
 }
 
+/* Personalizando a barra de rolagem */
+body::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+}
+
+body::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Cor de fundo da trilha */
+    border-radius: 10px;
+    padding: 2px; /* Adiciona espaço ao redor do thumb, criando a margem */
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #58af9b; /* Cor da barra de rolagem */
+    border-radius: 10px;
+    border: 3px solid #f1f1f1; /* Cor da "margem" ao redor do thumb */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: #3e8b7d; /* Cor da barra ao passar o mouse */
+    border: 3px solid #58af9b; /* Bordas ao redor da barra, mantendo a margem */
+}
+
 .status-indicator {
     width: 10px;
     height: 10px;

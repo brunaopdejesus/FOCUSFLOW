@@ -4,9 +4,76 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #ffffff;
+    background-color: #f4f4f4;
     font-family: Arial, sans-serif;
     color: #333333;
+}
+
+header {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: rgb(65, 65, 65);
+    width: 100%; /* Garante que o header ocupe 100% da largura da tela */
+    box-sizing: border-box; /* Inclui o padding e border no cálculo da largura */
+    position: fixed; /* Mantém o header fixo no topo da página */
+    top: 0; /* Alinha o header ao topo da página */
+    left: 0; /* Garante que o header esteja alinhado à esquerda */
+    z-index: 1000; /* Garante que o header esteja acima dos outros elementos */
+}
+
+.logo img {
+    height: 50px;
+}
+
+.nav-links a {
+    text-decoration: none; /* Remove a sublinha dos links */
+    color: inherit; /* Mantém a cor original do texto */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Remove a barra de rolagem horizontal */
+}
+
+.nav-links a h2 {
+    margin: 0;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: var(--text-color);
+}
+
+/* Efeito de cor ao passar o mouse */
+.nav-links a h2:hover {
+    color: #58af9b; /* Cor de destaque ao passar o mouse */
+}
+
+.nav-links {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente os links */
+    margin-right: 3%;
+    gap: 2%;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.nav-links h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.user img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Torna a imagem redonda */
+    object-fit: cover; /* Ajusta a imagem dentro do círculo */
 }
 
 h2 {

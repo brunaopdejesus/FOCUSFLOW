@@ -316,3 +316,66 @@ h1 {
     background-color: transparent; /* Faz o fundo ficar "vazado" */
     color: var(--primary-color); /* Cor do texto igual à da borda */
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Remove a barra de rolagem horizontal */
+    height: 100%; /* Garante que o body ocupe 100% da altura */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Garante que o container ocupe 100% da altura da tela */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    padding: 20px;
+    overflow: hidden; /* Remove rolagem */
+}
+
+.charts, .sensor-data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Centraliza os gráficos e dados */
+}
+
+.chart-container, .employee-list, .sensor-box {
+    max-width: calc(100% - 40px); /* Ajusta a largura máxima */
+}
+
+footer {
+    background-color: var(--primary-color);
+    padding: 30px;
+    gap: 90px;
+    font-size: 15px;
+    color: white;
+    text-align: center;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa 100% da altura da viewport */
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}

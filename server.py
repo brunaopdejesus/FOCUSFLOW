@@ -43,6 +43,10 @@ def admin():
 def circuito():
     return render_template('circuito.html')
 
+@app.route('/termos')
+def termos():
+    return render_template('termos_de_servico.html')
+
 @app.route('/visao_computacional')
 def visao_computacional():
     return render_template('visao-computacional.html')

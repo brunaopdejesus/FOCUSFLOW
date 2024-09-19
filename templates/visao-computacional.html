@@ -9,7 +9,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/visao-computacional.css') }}">
 </head>
 <body>
-    
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+            <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
+            <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
+            <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
+        </div>
+        <div class="user">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário"></a>
+        </div>
+    </header>
     <div class="container">
         <h2>Análise de Postura com Visão Computacional</h2>
         <div class="webcam-frame">
