@@ -1,63 +1,113 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Termos de Serviço - FocusFlow</title>
+    <title>Termos de Privacidade</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/termos_de_servico.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Barra de navegação -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Sobre o FocusFlow</a></li>
-                <li><a href="#">Contato</a></li>
-                <li><a href="#">Termos de Serviço</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+                <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
+                <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
+                <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
+            </div>
+            <div class="user">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário"></a>
+            </div>
+        </header>
 
-    <!-- Conteúdo dos Termos de Serviço -->
-    <main>
-        <section class="terms-section">
-            <h1>Termos de Serviço do FocusFlow</h1>
-            <p>Bem-vindo aos Termos de Serviço do FocusFlow. Ao utilizar nossa plataforma, você concorda com os seguintes termos:</p>
+        <main>
+            <section class="privacy-policy">
+                <h1>Termos de Serviço - FocusFlow</h1>
+                <h2>1. Aceitação dos Termos</h2>
+                <p>Ao acessar e utilizar os serviços da FocusFlow ("Serviços"), você concorda em se comprometer com os presentes Termos de Serviço ("Termos"). Estes Termos se aplicam a todos os usuários do FocusFlow, sejam indivíduos ou entidades que utilizam os serviços oferecidos. Caso não concorde com algum dos termos aqui estabelecidos, você não deverá utilizar os Serviços.</p>
+                
+                <h2>2. Definição dos Serviços</h2>
+                <p>A FocusFlow é uma solução tecnológica para monitoramento e análise de produtividade e bem-estar no ambiente de trabalho, composta pelos seguintes componentes:</p>
+                <ul>
+                    <li><strong>Monitoramento de Ambiente:</strong> Coleta de dados de temperatura, umidade (via sensor DHT11) e luminosidade (via sensor LDR) em tempo real, transmitidos via Bluetooth (módulo HC-05).</li>
+                    <li><strong>Monitoramento do Funcionário:</strong> Coleta de dados biométricos, como temperatura corporal e batimentos cardíacos, por meio de um smartwatch desenvolvido em Arduino.</li>
+                    <li><strong>Análise de Postura:</strong> Monitoramento de quatro posturas corporais (uma mão na cabeça, duas mãos na cabeça, mão no queixo e braços cruzados) utilizando visão computacional.</li>
+                    <li><strong>Dashboard Online:</strong> Interface centralizada e acessível por navegadores web que integra e exibe as informações coletadas sobre ambiente e funcionários.</li>
+                </ul>
 
-            <h2>1. Uso da Plataforma</h2>
-            <p>O FocusFlow deve ser utilizado de maneira ética e legal. O uso para fins ilícitos ou prejudiciais será estritamente proibido.</p>
+                <h2>3. Obrigações do Usuário</h2>
+                <p>Ao utilizar os Serviços da FocusFlow, você concorda em:</p>
+                <ul>
+                    <li>Utilizar os Serviços apenas para os fins legais e de acordo com todas as leis e regulamentos aplicáveis.</li>
+                    <li>Não tentar acessar ou interferir em informações de outros usuários ou sistemas sem autorização.</li>
+                    <li>Não realizar engenharia reversa, desmontar, modificar ou criar trabalhos derivados de qualquer parte dos Serviços.</li>
+                    <li>Garantir a proteção das credenciais de acesso ao dashboard e outros sistemas.</li>
+                </ul>
+                <p>A violação destas obrigações pode resultar na suspensão ou encerramento imediato do seu acesso aos Serviços.</p>
 
-            <h2>2. Coleta de Dados</h2>
-            <p>O FocusFlow coleta dados de saúde e produtividade dos colaboradores para gerar insights. Todos os dados estão sujeitos à nossa política de privacidade.</p>
+                <h2>4. Privacidade e Coleta de Dados</h2>
+                <p>Seu uso dos Serviços está sujeito à Política de Privacidade da FocusFlow, que detalha como coletamos, armazenamos e utilizamos suas informações. Ao utilizar nossos serviços, você concorda com os termos de nossa Política de Privacidade.</p>
 
-            <h2>3. Propriedade Intelectual</h2>
-            <p>Todos os componentes, algoritmos e designs do FocusFlow são protegidos por leis de propriedade intelectual e não podem ser reproduzidos sem autorização.</p>
+                <h2>5. Limitações de Responsabilidade</h2>
+                <p>A FocusFlow se esforça para garantir que os Serviços sejam precisos, confiáveis e seguros. No entanto, a FocusFlow não se responsabiliza por:</p>
+                <ul>
+                    <li>Qualquer interrupção de serviço, falhas técnicas ou perda de dados.</li>
+                    <li>Erros ou imprecisões nos dados coletados pelos sensores ou dispositivos de monitoramento.</li>
+                    <li>Qualquer dano ou perda resultante do uso indevido dos Serviços por parte do usuário.</li>
+                </ul>
+                <p>Os Serviços são fornecidos "como estão" e "conforme disponíveis". Não oferecemos garantias de que os Serviços estarão livres de erros ou que atenderão às suas expectativas.</p>
 
-            <h2>4. Direitos do Usuário</h2>
-            <p>Os usuários têm o direito de acessar e revisar seus dados a qualquer momento. A exclusão de dados deve ser solicitada formalmente.</p>
+                <h2>6. Modificações nos Termos</h2>
+                <p>A FocusFlow se reserva o direito de modificar ou atualizar estes Termos a qualquer momento, e tais modificações serão efetivas quando publicadas no site oficial. A continuidade do uso dos Serviços após a publicação das alterações implicará na aceitação das novas condições.</p>
 
-            <h2>5. Encerramento de Conta</h2>
-            <p>O FocusFlow reserva o direito de encerrar contas que violem os termos ou façam mau uso da plataforma.</p>
+                <h2>7. Encerramento dos Serviços</h2>
+                <p>Você pode encerrar sua conta ou o uso dos Serviços a qualquer momento. A FocusFlow também pode suspender ou encerrar seu acesso aos Serviços por qualquer motivo, incluindo violação destes Termos.</p>
 
-            <h2>6. Alterações nos Termos</h2>
-            <p>Estes termos podem ser modificados conforme a evolução da plataforma. Notificaremos sobre qualquer mudança significativa.</p>
+                <h2>8. Contato</h2>
+                <p>Se você tiver dúvidas ou preocupações sobre estes Termos de Serviço, entre em contato através do e-mail: <a href="mailto:[email@example.com]">[email@example.com]</a>.</p>
+            </section>
+        </main>
+        
 
-            <h2>7. Limitação de Responsabilidade</h2>
-            <p>A FocusFlow não se responsabiliza por perdas decorrentes de uso incorreto dos dados ou da plataforma.</p>
-
-            <h2>8. Jurisdição</h2>
-            <p>Estes termos são regidos pelas leis brasileiras. Disputas serão resolvidas nos tribunais de São Paulo.</p>
-        </section>
-        <button id="accept-btn">Aceitar Termos</button>
-    </main>
-
-    <!-- Rodapé -->
-    <footer>
-        <p>&copy; 2024 FocusFlow. Todos os direitos reservados.</p>
-    </footer>
-
-    <script src="scripts.js"></script>
+        <footer>
+            <div class="footer-container">
+                <div class="footer-social">
+                    <div class="social-links">
+                        <a href="https://www.facebook.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                        </a>
+                        <a href="https://www.instagram.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram">
+                        </a>
+                        <a href="https://www.twitter.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+                        </a>
+                        <a href="https://www.linkedin.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-legal">
+                    <p><a href="{{ url_for('termos') }}">Termos de Serviço</a> | <a href="{{ url_for('privacidade') }}">Política de Privacidade</a></p>
+                </div>
+                <div class="footer-info">
+                    <p>Monitoramento inteligente de saúde para funcionários. © 2024 FocusFlow | Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/privacy-policy.js') }}"></script>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
 </body>
 </html>

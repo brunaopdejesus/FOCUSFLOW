@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Privacidade</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/politica_privacidade.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+                <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
+                <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
+                <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
+            </div>
+            <div class="user">
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário"></a>
+            </div>
+        </header>
+
+        <main>
+            <section class="privacy-policy">
+                <h1>Política de Privacidade - FocusFlow</h1>
+                <h2>1. Informações Coletadas</h2>
+                <p>A FocusFlow coleta diversos tipos de dados, com o objetivo de monitorar o ambiente de trabalho e os funcionários, visando melhorar a produtividade e o bem-estar. As informações que podemos coletar incluem:</p>
+                <ul>
+                    <li><strong>Monitoramento de Ambiente:</strong> Dados de temperatura, umidade e luminosidade, capturados por sensores instalados no local de trabalho.</li>
+                    <li><strong>Monitoramento do Funcionário:</strong> Informações biométricas como temperatura corporal, batimentos cardíacos e outros sinais vitais capturados por dispositivos vestíveis, como smartwatches.</li>
+                    <li><strong>Análise de Postura:</strong> Dados de postura corporal obtidos por meio de visão computacional, com foco em posturas específicas que podem indicar estresse ou desconforto.</li>
+                    <li><strong>Dashboard:</strong> Centralização e exibição das informações coletadas em um ambiente online.</li>
+                </ul>
+
+                <h2>2. Uso das Informações</h2>
+                <p>As informações coletadas são utilizadas para os seguintes propósitos:</p>
+                <ul>
+                    <li><strong>Análise e Melhoria do Ambiente de Trabalho:</strong> Utilizamos os dados de ambiente e biométricos para fornecer insights sobre condições que possam impactar a produtividade e o bem-estar.</li>
+                    <li><strong>Monitoramento e Feedback em Tempo Real:</strong> Com base nas posturas monitoradas e dados ambientais, fornecemos relatórios e alertas que ajudam a melhorar a ergonomia e a saúde dos funcionários.</li>
+                    <li><strong>Melhorias no Sistema:</strong> Podemos utilizar os dados para desenvolver e aprimorar nossos sistemas e algoritmos de monitoramento.</li>
+                </ul>
+                <p>Os dados pessoais e informações sensíveis não serão compartilhados com terceiros sem o consentimento explícito do usuário, exceto em circunstâncias exigidas por lei.</p>
+
+                <h2>3. Armazenamento e Proteção dos Dados</h2>
+                <p>Os dados coletados pela FocusFlow são armazenados de forma segura, utilizando criptografia e outras medidas de segurança apropriadas para prevenir acessos não autorizados, perda ou alteração de dados. No entanto, apesar dos nossos esforços, nenhuma transmissão de dados pela internet é completamente segura, e não podemos garantir a proteção absoluta dos dados transmitidos ou armazenados.</p>
+
+                <h2>4. Retenção de Dados</h2>
+                <p>Os dados coletados serão mantidos enquanto forem necessários para o cumprimento dos propósitos para os quais foram coletados, ou conforme exigido por lei. Caso você solicite a exclusão dos seus dados, estes serão removidos de nossos sistemas, exceto se forem legalmente obrigatórios.</p>
+
+                <h2>5. Direitos dos Usuários</h2>
+                <p>Você tem os seguintes direitos em relação às suas informações pessoais:</p>
+                <ul>
+                    <li><strong>Acesso:</strong> Você pode solicitar acesso às informações pessoais que mantemos sobre você.</li>
+                    <li><strong>Correção:</strong> Se seus dados estiverem incorretos, você tem o direito de solicitar correções.</li>
+                    <li><strong>Exclusão:</strong> Você pode solicitar a exclusão dos seus dados pessoais, exceto quando tivermos uma obrigação legal de retê-los.</li>
+                    <li><strong>Restrição de Processamento:</strong> Você pode solicitar a limitação do uso dos seus dados em determinadas circunstâncias.</li>
+                </ul>
+                <p>Para exercer esses direitos, entre em contato conosco por meio do e-mail: <a href="mailto:[email@example.com]">[email@example.com]</a>.</p>
+
+                <h2>6. Uso de Cookies</h2>
+                <p>Nosso site e dashboard podem utilizar cookies e outras tecnologias de rastreamento para melhorar a experiência do usuário. Cookies são pequenos arquivos que são armazenados no dispositivo do usuário e que ajudam a personalizar a experiência de navegação. Você pode optar por desativar os cookies em seu navegador, mas isso pode impactar o uso dos nossos serviços.</p>
+
+                <h2>7. Alterações na Política de Privacidade</h2>
+                <p>Reservamo-nos o direito de alterar esta Política de Privacidade a qualquer momento. Alterações significativas serão notificadas através de nosso site ou por e-mail. O uso contínuo dos nossos serviços após a publicação das alterações implica na aceitação das novas políticas.</p>
+
+                <h2>8. Contato</h2>
+                <p>Para questões relacionadas a esta Política de Privacidade ou para exercer seus direitos como titular de dados, entre em contato conosco pelo e-mail: <a href="mailto:[email@example.com]">[email@example.com]</a>.</p>
+            </section>
+        </main>
+        
+
+        <footer>
+            <div class="footer-container">
+                <div class="footer-social">
+                    <div class="social-links">
+                        <a href="https://www.facebook.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                        </a>
+                        <a href="https://www.instagram.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram">
+                        </a>
+                        <a href="https://www.twitter.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter">
+                        </a>
+                        <a href="https://www.linkedin.com" target="_blank">
+                            <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-legal">
+                    <p><a href="{{ url_for('termos') }}">Termos de Serviço</a> | <a href="{{ url_for('privacidade') }}">Política de Privacidade</a></p>
+                </div>
+                <div class="footer-info">
+                    <p>Monitoramento inteligente de saúde para funcionários. © 2024 FocusFlow | Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <!-- <script src="{{ url_for('static', filename='js/.js') }}"></script> -->
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+</body>
+</html>

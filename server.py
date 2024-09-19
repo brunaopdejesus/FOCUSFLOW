@@ -47,6 +47,10 @@ def circuito():
 def termos():
     return render_template('termos_de_servico.html')
 
+@app.route('/privacidade')
+def privacidade():
+    return render_template('politica_privacidade.html')
+
 @app.route('/visao_computacional')
 def visao_computacional():
     return render_template('visao-computacional.html')
