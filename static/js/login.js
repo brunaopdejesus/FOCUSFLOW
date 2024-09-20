@@ -19,7 +19,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             window.location.href = '/admin'; 
         } else {
             // Redireciona para a rota Flask do perfil do funcionário
-            window.location.href = '/perfil-funcionario';
+            window.location.href = '/user';
         }
     } else {
         document.getElementById('error-message').classList.remove('hidden');

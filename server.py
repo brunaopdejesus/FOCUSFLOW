@@ -3,27 +3,18 @@ from flask import Flask, jsonify, render_template, request, send_file
 
 app = Flask(__name__)
 
-# Variáveis globais para armazenar os dados dos sensores
 sensor_data = {
     "temperature": None,
     "humidity": None,
     "ldr_value": None
 }
 
-# Rota para exibir a página HTML
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# @app.route('/funcionario')
-# def funcionario():
-#     return render_template('funcionario.html')
-
 @app.route('/funcionario/<nome>')
 def funcionario(nome):
-    # Aqui você pode carregar dados específicos do funcionário, se necessário
-    # Exemplo: buscar informações de um banco de dados ou arquivo
-    # Por enquanto, apenas renderize a página com o nome do funcionário
     return render_template('funcionario.html', nome=nome)
 
 
@@ -55,7 +46,6 @@ def privacidade():
 def visao_computacional():
     return render_template('visao-computacional.html')
 
-# Rota para receber dados dos sensores via POST
 @app.route('/api/dados', methods=['POST'])
 def receber_dados():
     global sensor_data
@@ -68,7 +58,6 @@ def receber_dados():
 
     return jsonify({"status": "sucesso", "dados_recebidos": data})
 
-# Rota para enviar os dados para o frontend
 @app.route('/api/get_dados', methods=['GET'])
 def get_dados():
     return jsonify(sensor_data)
@@ -77,17 +66,12 @@ def get_dados():
 def atualizar_tabela():
     with open('dados_sensores.csv', 'r') as file:
         reader = csv.DictReader(file)
-        dados = list(reader)[-1]  # Pegue a última linha, assumindo que ela tem os dados mais recentes
-    return jsonify(dados)
+        dados = list(reader)[-1]  
 
-# Rota para download do arquivo CSV
 @app.route('/download')
 def download_file():
-    caminho_arquivo = 'dados_sensores.csv'  # Certifique-se de que o caminho está correto
+    caminho_arquivo = 'dados_sensores.csv' 
     return send_file(caminho_arquivo, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
-    # app.run(debug=True, port=5000)
-
-    #hshds
