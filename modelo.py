@@ -30,3 +30,18 @@ print("\nNível de estresse previsto para o novo dado:", nivel_estresse_previsto
 # Alerta preventivo
 if nivel_estresse_previsto == "Alto":
     print("Alerta: Funcionário está se aproximando de níveis de estresse críticos. Sugerir medidas preventivas.")
+
+import json
+
+# Salvar os resultados em um arquivo JSON para uso no frontend
+resultados = {
+    "previsao_nivel_estresse": nivel_estresse_previsto,
+    "media_batimentos": novo_dado['media_batimentos'].tolist(),
+    "menor_batimento": novo_dado['menor_batimento'].tolist(),
+    "maior_batimento": novo_dado['maior_batimento'].tolist(),
+    "pressao_menor_min": novo_dado['pressao_menor_min'].tolist(),
+    "pressao_maior_min": novo_dado['pressao_maior_min'].tolist()
+}
+
+with open('resultados_previsao.json', 'w') as f:
+    json.dump(resultados, f)
