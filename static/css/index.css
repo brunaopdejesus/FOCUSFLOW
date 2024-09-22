@@ -49,20 +49,26 @@ body {
 }
 
 /* Cores para as mensagens */
-.status-green {
-    background-color: #4CAF50;
-    animation: blink 2s infinite;
+.status-notification {
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
 }
 
-.status-yellow {
-    background-color: #FFEB3B;
-    animation: blink 2s infinite;
+.status-baixo {
+    background-color: rgb(82, 197, 82); /* Baixo */
 }
 
-.status-red {
-    background-color: #F44336;
-    animation: blink 2s infinite;
+.status-moderado {
+    background-color: rgb(230, 230, 75); /* Moderado */
+    color: rgb(255, 255, 255); /* Texto em preto para melhor contraste */
 }
+
+.status-alto {
+    background-color: rgb(231, 72, 72); /* Alto */
+}
+
 
 
 

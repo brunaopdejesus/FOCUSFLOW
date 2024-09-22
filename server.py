@@ -73,5 +73,45 @@ def download_file():
     caminho_arquivo = 'dados_sensores.csv' 
     return send_file(caminho_arquivo, as_attachment=True)
 
+from flask import Flask, render_template, jsonify
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import joblib
+
+@app.route('/dados')
+def dados():
+    # Carregar o modelo treinado
+    modelo = joblib.load('modelo.pkl')
+
+    # Recriar o LabelEncoder com os dados do dataset
+    file_path = './dataset_estresse_variante.csv'
+    data = pd.read_csv(file_path)
+
+    # Codificar a coluna 'nivel_estresse'
+    label_encoder = LabelEncoder()
+    label_encoder.fit(data['nivel_estresse'])
+
+    # Carregar os novos dados para prever
+    novo_dado = pd.read_csv('./dados_predicao.csv')
+
+    # Fazer a previsão com o modelo carregado
+    previsao_novo_dado = modelo.predict(novo_dado)
+
+    # Decodificar a previsão
+    nivel_estresse_previsto = label_encoder.inverse_transform(previsao_novo_dado)[0]
+
+    # Criar um dicionário com os resultados
+    resultados = {
+        "previsao_nivel_estresse": nivel_estresse_previsto,
+        "media_batimentos": novo_dado['media_batimentos'].tolist(),
+        "menor_batimento": novo_dado['menor_batimento'].tolist(),
+        "maior_batimento": novo_dado['maior_batimento'].tolist(),
+        "pressao_menor_min": novo_dado['pressao_menor_min'].tolist(),
+        "pressao_maior_min": novo_dado['pressao_maior_min'].tolist()
+    }
+
+    return jsonify(resultados)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

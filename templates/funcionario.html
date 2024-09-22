@@ -77,17 +77,11 @@
                 <section class="feedback-list">
                     <h2>Selecione o Gráfico</h2>
                     <ul id="feedbackOptions">
-                        <li onclick="showChart('healthPatternsChart')">Análise Preditiva de Padrões de Saúde</li>
-                        <li onclick="showChart('productivityWellbeingChart')">Análise Preditiva da Produtividade vs. Bem-Estar</li>
-                    </ul>
+                        <li onclick="showChart('healthPatternsChart')">Análise Preditiva de Estresse Extremo</li>                    </ul>
                 </section>
                 <section class="feedback-card">
-                    <h2>Análise Preditiva de Padrões de Saúde</h2>
-                    <canvas id="healthPatternsChart"></canvas>
-                </section>
-                <section class="feedback-card">
-                    <h2>Análise Preditiva da Produtividade vs. Bem-Estar</h2>
-                    <canvas id="productivityWellbeingChart"></canvas>
+                    <h2>Análise Preditiva de Estresse Extremo</h2>
+                    <canvas id="graficoEstresse"></canvas>
                 </section>
             </aside>            
         </main>
@@ -103,6 +97,70 @@
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <script>
+        async function carregarDados() {
+            try {
+                const response = await fetch('/dados');
+                const dados = await response.json();
+
+                // Atualizar o status do funcionário
+                const notificationText = document.getElementById('notificationText');
+                notificationText.textContent = `O provável nível de estresse extremo do funcionário atualmente é: ${dados.previsao_nivel_estresse}`;
+
+                // Atualizar a cor de fundo com base no nível de estresse
+                const statusNotification = document.getElementById('statusNotification');
+                statusNotification.className = 'status-notification'; // Reseta as classes
+                if (dados.previsao_nivel_estresse === 'Baixo') {
+                    statusNotification.classList.add('status-baixo');
+                } else if (dados.previsao_nivel_estresse === 'Moderado') {
+                    statusNotification.classList.add('status-moderado');
+                } else if (dados.previsao_nivel_estresse === 'Alto') {
+                    statusNotification.classList.add('status-alto');
+                }
+
+                // Dados para o gráfico
+                const dadosGrafico = {
+                    labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
+                    datasets: [{
+                        label: `Nível de Estresse Previsto: ${dados.previsao_nivel_estresse}`,
+                        data: [
+                            dados.media_batimentos[0], 
+                            dados.menor_batimento[0], 
+                            dados.maior_batimento[0], 
+                            dados.pressao_menor_min[0], 
+                            dados.pressao_maior_min[0]
+                        ],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                // Configuração do gráfico
+                const config = {
+                    type: 'bar',
+                    data: dadosGrafico,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                // Renderizando o gráfico
+                const ctx = document.getElementById('graficoEstresse').getContext('2d');
+                new Chart(ctx, config);
+            } catch (error) {
+                console.error("Erro ao carregar os dados:", error);
+            }
+        }
+
+        // Carregar os dados e criar o gráfico ao carregar a página
+        carregarDados();
+
     </script>
 </body>
 </html>

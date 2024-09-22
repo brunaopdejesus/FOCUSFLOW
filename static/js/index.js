@@ -196,34 +196,4 @@ const productivityWellbeingChart = new Chart(productivityCtx, {
     }
 });
 
-// Função para atualizar o texto da notificação
-function updateNotification(statusMessage) {
-    const notificationElement = document.getElementById('notificationText');
-    notificationElement.textContent = statusMessage;
-}
-// Dados de status do funcionário
-const statusMessages = [
-    { color: 'status-green', message: 'Funcionário Bem' },
-    { color: 'status-yellow', message: 'Funcionário com Desconforto Cardíaco' },
-    { color: 'status-red', message: 'Funcionário Prestes a ter um Infarto. Providêncie ajuda imediatamente!' }
-];
 
-let currentStatusIndex = 0;
-
-// Função para atualizar a notificação de status
-function updateStatusNotification() {
-    const notificationElement = document.getElementById('statusNotification');
-    const status = statusMessages[currentStatusIndex];
-
-    notificationElement.className = `status-notification ${status.color}`;
-    notificationElement.textContent = status.message;
-
-    // Alternar para a próxima mensagem
-    currentStatusIndex = (currentStatusIndex + 1) % statusMessages.length;
-}
-
-// Atualiza a notificação a cada 5 segundos
-setInterval(updateStatusNotification, 5000);
-
-// Atualiza a notificação imediatamente na carga da página
-updateStatusNotification();
