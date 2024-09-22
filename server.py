@@ -1,5 +1,8 @@
 import csv
 from flask import Flask, jsonify, render_template, request, send_file
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import joblib
 
 app = Flask(__name__)
 
@@ -73,11 +76,6 @@ def download_file():
     caminho_arquivo = 'dados_sensores.csv' 
     return send_file(caminho_arquivo, as_attachment=True)
 
-from flask import Flask, render_template, jsonify
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-import joblib
-
 @app.route('/dados')
 def dados():
     # Carregar o modelo treinado
@@ -111,6 +109,18 @@ def dados():
     }
 
     return jsonify(resultados)
+
+# Renomeie a função para evitar conflito de nomes
+@app.route('/api/dados', methods=['POST'])
+def receber_bpm_uid():
+    data = request.get_json()
+    bpm = data.get('BPM')
+    uid = data.get('UID')
+
+    print(f"BPM: {bpm}, UID: {uid}")
+
+    # Aqui você pode salvar os dados em um banco de dados ou processar como necessário
+    return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
 
 
 if __name__ == '__main__':
