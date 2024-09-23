@@ -2,7 +2,10 @@ import csv
 from flask import Flask, jsonify, render_template, request, send_file
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+import threading  # Adicione esta linha
 import joblib
+import serial
+import time
 
 app = Flask(__name__)
 
@@ -11,6 +14,76 @@ sensor_data = {
     "humidity": None,
     "ldr_value": None
 }
+
+# Dados de BPM e UID (segundo circuito - smartwatch)
+smartwatch_data = {
+    "bpm": None,
+    "uid": None
+}
+
+# Inicializa a conexão serial para o smartwatch (use a porta correta)
+ser = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
+
+# Lista para armazenar os valores de BPM
+bpm_list = []
+
+def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
+    file_path = './dados_predicao.csv'
+    with open(file_path, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['media_batimentos', 'menor_batimento', 'maior_batimento', 'pressao_menor_min', 'pressao_menor_max', 'pressao_maior_min', 'pressao_maior_max'])
+        writer.writerow([media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max])
+
+def monitorar_bpm():
+    while True:
+        if ser.in_waiting > 0:
+            linha = ser.readline().decode('utf-8').strip()
+            print(f"Dado recebido: {linha}")
+            
+            try:
+                if "BPM" in linha:
+                    bpm_data = eval(linha)
+                    bpm = bpm_data['BPM']
+                    uid = bpm_data.get('UID', 'desconhecido')  # UID opcional
+                    
+                    # Atualizar os dados globais de BPM e UID
+                    smartwatch_data['bpm'] = bpm
+                    smartwatch_data['uid'] = uid
+                    bpm_list.append(bpm)
+
+                    if len(bpm_list) >= 10:
+                        media_batimentos = sum(bpm_list) / len(bpm_list)
+                        menor_batimento = min(bpm_list)
+                        maior_batimento = max(bpm_list)
+
+                        pressao_menor_min = 80
+                        pressao_menor_max = 85
+                        pressao_maior_min = 120
+                        pressao_maior_max = 125
+
+                        salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
+                        print("Dados salvos no CSV com sucesso!")
+                        bpm_list.clear()
+
+            except Exception as e:
+                print(f"Erro ao processar dados: {e}")
+
+# Função para iniciar o monitoramento de BPM em segundo plano
+def iniciar_monitoramento_smartwatch():
+    monitoramento_thread = threading.Thread(target=monitorar_bpm)
+    monitoramento_thread.daemon = True
+    monitoramento_thread.start()
+
+# Rota para os dados do smartwatch (BPM e UID)
+@app.route('/api/get_smartwatch_dados', methods=['GET'])
+def get_smartwatch_dados():
+    return jsonify(smartwatch_data)
+
+# Rota para os dados do circuito de sensores
+@app.route('/api/get_sensor_dados', methods=['GET'])
+def get_sensor_dados():
+    return jsonify(sensor_data)
+
 
 @app.route('/')
 def index():
@@ -124,4 +197,5 @@ def receber_bpm_uid():
 
 
 if __name__ == '__main__':
+    iniciar_monitoramento_smartwatch()
     app.run(debug=True)
