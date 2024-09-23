@@ -52,67 +52,62 @@ smartwatch_data = {
 # Lista para armazenar os valores de BPM
 bpm_list = []
 
-# Monitoramento dos dados do smartwatch (BPM)
 def monitorar_bpm():
+    global smartwatch_data  # Adicionar essa linha para acessar a variável global
+
     while True:
-        if ENV == "development":
-            if ser_smartwatch.in_waiting > 0:
-                linha = ser_smartwatch.readline().decode('utf-8').strip()
-                print(f"Dado recebido: {linha}")
-                try:
-                    if "BPM" in linha:
-                        bpm_data = eval(linha)
-                        bpm = bpm_data['BPM']
-                        uid = bpm_data.get('UID', 'desconhecido')
+        if ser_smartwatch.in_waiting > 0:
+            linha = ser_smartwatch.readline().decode('utf-8').strip()
+            print(f"Dado recebido: {linha}")
+            try:
+                if "BPM" in linha:
+                    bpm_data = eval(linha)
+                    bpm = bpm_data['BPM']
+                    uid = bpm_data.get('UID', 'desconhecido')
 
-                        smartwatch_data['bpm'] = bpm
-                        smartwatch_data['uid'] = uid
-                        bpm_list.append(bpm)
+                    smartwatch_data['bpm'] = bpm
+                    smartwatch_data['uid'] = uid
+                    bpm_list.append(bpm)
 
-                        if len(bpm_list) >= 10:
-                            media_batimentos = sum(bpm_list) / len(bpm_list)
-                            menor_batimento = min(bpm_list)
-                            maior_batimento = max(bpm_list)
+                    if len(bpm_list) >= 10:
+                        media_batimentos = sum(bpm_list) / len(bpm_list)
+                        menor_batimento = min(bpm_list)
+                        maior_batimento = max(bpm_list)
 
-                            pressao_menor_min = 80
-                            pressao_menor_max = 85
-                            pressao_maior_min = 120
-                            pressao_maior_max = 125
+                        pressao_menor_min = 80
+                        pressao_menor_max = 85
+                        pressao_maior_min = 120
+                        pressao_maior_max = 125
 
-                            salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
-                            print("Dados salvos no CSV com sucesso!")
-                            bpm_list.clear()
-                except Exception as e:
-                    print(f"Erro ao processar dados: {e}")
-        else:
-            smartwatch_data = ser_smartwatch()
-            print(f"Simulação - Smartwatch: {smartwatch_data}")
+                        salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
+                        print("Dados salvos no CSV com sucesso!")
+                        bpm_list.clear()
+            except Exception as e:
+                print(f"Erro ao processar dados: {e}")
         time.sleep(1)
 
-# Monitoramento dos dados do circuito de sensores (Bluetooth HC-05)
 def monitorar_sensores():
-    while True:
-        if ENV == "development":
-            if ser_circuito.in_waiting > 0:
-                data = ser_circuito.readline().decode('utf-8').strip()
-                print(f"Dados recebidos: {data}")
-                try:
-                    if "Umidade:" in data and "Temperatura:" in data:
-                        valores = extrair_valor_de_string(data)
-                        sensor_data['humidity'] = float(valores[0])
-                        sensor_data['temperature'] = float(valores[1])
-                    elif "Luminosidade" in data:
-                        valores = extrair_valor_de_string(data)
-                        sensor_data['ldr_value'] = int(valores[0])
+    global sensor_data  # Adicionar essa linha para acessar a variável global
 
-                        salvar_dados_csv(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-                        enviar_dados_para_localhost(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-                except (IndexError, ValueError) as e:
-                    print(f"Erro ao processar dados: {e}")
-        else:
-            sensor_data = ser_circuito()
-            print(f"Simulação - Sensores: {sensor_data}")
+    while True:
+        if ser_circuito.in_waiting > 0:
+            data = ser_circuito.readline().decode('utf-8').strip()
+            print(f"Dados recebidos: {data}")
+            try:
+                if "Umidade:" in data and "Temperatura:" in data:
+                    valores = extrair_valor_de_string(data)
+                    sensor_data['humidity'] = float(valores[0])
+                    sensor_data['temperature'] = float(valores[1])
+                elif "Luminosidade" in data:
+                    valores = extrair_valor_de_string(data)
+                    sensor_data['ldr_value'] = int(valores[0])
+
+                    salvar_dados_csv(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
+                    enviar_dados_para_localhost(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
+            except (IndexError, ValueError) as e:
+                print(f"Erro ao processar dados: {e}")
         time.sleep(2)
+
 
 # Funções auxiliares (CSV, envio de dados, etc.)
 def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
