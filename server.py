@@ -183,5 +183,8 @@ def receber_bpm_uid():
     return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
 
 
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Obtém a porta do ambiente ou usa 5000 como padrão
+    app.run(host='0.0.0.0', port=port, debug=True)  # Exponha em 0.0.0.0 para funcionar no Render
