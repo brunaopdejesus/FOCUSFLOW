@@ -1,7 +1,7 @@
 // Dados dos funcionários
 const employeeData = {
     'Alexandre Henrique Monteiro da Silva': {
-        heartRate: [70, 72, 68, 74, 71, 73, 69],
+        heartRate: [81, 79, 77, 82, 80, 79, 80],
         bloodPressure: [120, 122, 118, 124, 119, 121, 123],
         bodyTemperature: [36.5, 36.6, 36.7, 36.8, 36.6, 36.7, 36.8],
         breakFrequency: [2, 3, 2, 4, 3, 2, 3],
