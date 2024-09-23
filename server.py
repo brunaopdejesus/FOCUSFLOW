@@ -2,163 +2,15 @@ import csv
 from flask import Flask, jsonify, render_template, request, send_file
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
-import threading
 import joblib
-import serial
-import time
-import requests
-import re
-import os
-import random
-
 
 app = Flask(__name__)
 
-ENV = os.getenv("ENV", "development")
-
-if ENV == "development":
-    import serial
-    # Inicializa as conexões seriais no ambiente de desenvolvimento
-    ser_smartwatch = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
-    ser_circuito = serial.Serial('/dev/cu.HC-05-SPPDev', 9600)
-    ser_circuito.flush()
-else:
-    # Simulação em produção
-    def simular_dados_smartwatch():
-        return {'BPM': random.randint(60, 100), 'UID': 'simulado'}
-
-    def simular_dados_sensores():
-        return {'temperature': random.uniform(20.0, 30.0),
-                'humidity': random.uniform(30.0, 60.0),
-                'ldr_value': random.randint(0, 1023)}
-
-    # Substituir as funções ser_smartwatch e ser_circuito pela simulação
-    ser_smartwatch = simular_dados_smartwatch
-    ser_circuito = simular_dados_sensores
-    print("Ambiente de produção - Simulação ativada.")
-
-# Dados globais para os sensores e smartwatch
 sensor_data = {
     "temperature": None,
     "humidity": None,
     "ldr_value": None
 }
-
-smartwatch_data = {
-    "bpm": None,
-    "uid": None
-}
-
-# Lista para armazenar os valores de BPM
-bpm_list = []
-
-def monitorar_bpm():
-    global smartwatch_data  # Adicionar essa linha para acessar a variável global
-
-    while True:
-        if ser_smartwatch.in_waiting > 0:
-            linha = ser_smartwatch.readline().decode('utf-8').strip()
-            print(f"Dado recebido: {linha}")
-            try:
-                if "BPM" in linha:
-                    bpm_data = eval(linha)
-                    bpm = bpm_data['BPM']
-                    uid = bpm_data.get('UID', 'desconhecido')
-
-                    smartwatch_data['bpm'] = bpm
-                    smartwatch_data['uid'] = uid
-                    bpm_list.append(bpm)
-
-                    if len(bpm_list) >= 10:
-                        media_batimentos = sum(bpm_list) / len(bpm_list)
-                        menor_batimento = min(bpm_list)
-                        maior_batimento = max(bpm_list)
-
-                        pressao_menor_min = 80
-                        pressao_menor_max = 85
-                        pressao_maior_min = 120
-                        pressao_maior_max = 125
-
-                        salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
-                        print("Dados salvos no CSV com sucesso!")
-                        bpm_list.clear()
-            except Exception as e:
-                print(f"Erro ao processar dados: {e}")
-        time.sleep(1)
-
-def monitorar_sensores():
-    global sensor_data  # Adicionar essa linha para acessar a variável global
-
-    while True:
-        if ser_circuito.in_waiting > 0:
-            data = ser_circuito.readline().decode('utf-8').strip()
-            print(f"Dados recebidos: {data}")
-            try:
-                if "Umidade:" in data and "Temperatura:" in data:
-                    valores = extrair_valor_de_string(data)
-                    sensor_data['humidity'] = float(valores[0])
-                    sensor_data['temperature'] = float(valores[1])
-                elif "Luminosidade" in data:
-                    valores = extrair_valor_de_string(data)
-                    sensor_data['ldr_value'] = int(valores[0])
-
-                    salvar_dados_csv(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-                    enviar_dados_para_localhost(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-            except (IndexError, ValueError) as e:
-                print(f"Erro ao processar dados: {e}")
-        time.sleep(2)
-
-
-# Funções auxiliares (CSV, envio de dados, etc.)
-def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
-    file_path = './dados_predicao.csv'
-    with open(file_path, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['media_batimentos', 'menor_batimento', 'maior_batimento', 'pressao_menor_min', 'pressao_menor_max', 'pressao_maior_min', 'pressao_maior_max'])
-        writer.writerow([media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max])
-
-def extrair_valor_de_string(data_string):
-    return re.findall(r"[-+]?\d*\.\d+|\d+", data_string)
-
-def salvar_dados_csv(temperature, humidity, ldr_value):
-    with open('dados_sensores.csv', mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), temperature, humidity, ldr_value])
-
-def enviar_dados_para_localhost(temperature, humidity, ldr_value):
-    url = "http://localhost:5000/api/dados"
-    payload = {
-        "temperature": temperature,
-        "humidity": humidity,
-        "ldr_value": ldr_value
-    }
-    try:
-        response = requests.post(url, json=payload)
-        if response.status_code == 200:
-            print("Dados enviados para o localhost com sucesso!")
-        else:
-            print(f"Erro ao enviar dados: {response.status_code}")
-    except Exception as e:
-        print(f"Erro na conexão com o localhost: {e}")
-
-# Iniciar monitoramento do smartwatch e dos sensores em threads separadas
-def iniciar_monitoramento():
-    thread_bpm = threading.Thread(target=monitorar_bpm)
-    thread_bpm.daemon = True
-    thread_bpm.start()
-
-    thread_sensores = threading.Thread(target=monitorar_sensores)
-    thread_sensores.daemon = True
-    thread_sensores.start()
-
-# Rotas da API e funções do Flask
-@app.route('/api/get_smartwatch_dados', methods=['GET'])
-def get_smartwatch_dados():
-    return jsonify(smartwatch_data)
-
-@app.route('/api/get_sensor_dados', methods=['GET'])
-def get_sensor_dados():
-    return jsonify(sensor_data)
 
 @app.route('/')
 def index():
@@ -196,7 +48,6 @@ def privacidade():
 @app.route('/visao_computacional')
 def visao_computacional():
     return render_template('visao-computacional.html')
-
 
 @app.route('/api/dados', methods=['POST'])
 def receber_dados():
@@ -273,5 +124,4 @@ def receber_bpm_uid():
 
 
 if __name__ == '__main__':
-    iniciar_monitoramento()
     app.run(debug=True)
