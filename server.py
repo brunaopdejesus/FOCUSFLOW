@@ -9,11 +9,46 @@ import time
 import requests
 import re
 import os
-
-# Pega o valor da variável de ambiente ENV ou usa "development" como padrão
-ENV = os.getenv("ENV", "development")
+import random
 
 app = Flask(__name__)
+
+ENV = os.getenv("ENV", "development")
+
+if ENV == "development":
+    # Inicializa as conexões seriais no ambiente de desenvolvimento
+    ser_smartwatch = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
+    ser_circuito = serial.Serial('/dev/cu.HC-05-SPPDev', 9600)
+    ser_circuito.flush()
+else:
+    # Simulação em produção
+    def simular_dados_smartwatch():
+        return {'BPM': random.randint(60, 100), 'UID': 'simulado'}
+
+    def simular_dados_sensores():
+        return {'temperature': random.uniform(20.0, 30.0),
+                'humidity': random.uniform(30.0, 60.0),
+                'ldr_value': random.randint(0, 1023)}
+
+    # Substituir as funções ser_smartwatch e ser_circuito pela simulação
+    ser_smartwatch = simular_dados_smartwatch
+    ser_circuito = simular_dados_sensores
+    print("Ambiente de produção - Simulação ativada.")
+
+# Exemplo de uso
+while True:
+    if ENV == "development":
+        # Leitura real dos dispositivos
+        if ser_smartwatch.in_waiting > 0:
+            dados_smartwatch = ser_smartwatch.readline().decode('utf-8').strip()
+            print(dados_smartwatch)
+    else:
+        # Simulação em produção
+        smartwatch_data = ser_smartwatch()
+        sensor_data = ser_circuito()
+        print(f"Smartwatch: {smartwatch_data}, Sensores: {sensor_data}")
+
+    time.sleep(2)
 
 # Dados globais para os sensores e smartwatch
 sensor_data = {
