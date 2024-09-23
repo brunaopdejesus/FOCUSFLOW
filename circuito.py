@@ -5,7 +5,7 @@ import time
 import re
 
 # Configuração da porta serial (Bluetooth HC-05)
-bluetooth = serial.Serial('/dev/tty.HC-05-SPPDev', 9600)  # Altere para sua porta correta
+bluetooth = serial.Serial('/dev/cu.HC-05-SPPDev', 9600)  # Altere para sua porta correta
 bluetooth.flush()
 
 # URL do localhost para onde os dados serão enviados
