@@ -49,52 +49,21 @@ def privacidade():
 def visao_computacional():
     return render_template('visao-computacional.html')
 
-# @app.route('/api/dados', methods=['POST'])
-# def receber_dados():
-#     global sensor_data
-#     data = request.get_json()
-#     sensor_data["temperature"] = data.get('temperature')
-#     sensor_data["humidity"] = data.get('humidity')
-#     sensor_data["ldr_value"] = data.get('ldr_value')
+@app.route('/api/dados', methods=['POST'])
+def receber_dados():
+    global sensor_data
+    data = request.get_json()
+    sensor_data["temperature"] = data.get('temperature')
+    sensor_data["humidity"] = data.get('humidity')
+    sensor_data["ldr_value"] = data.get('ldr_value')
 
-#     print(f"Dados recebidos: Temp={sensor_data['temperature']}°C, Umidade={sensor_data['humidity']}%, Luminosidade={sensor_data['ldr_value']}")
+    print(f"Dados recebidos: Temp={sensor_data['temperature']}°C, Umidade={sensor_data['humidity']}%, Luminosidade={sensor_data['ldr_value']}")
 
-#     return jsonify({"status": "sucesso", "dados_recebidos": data})
+    return jsonify({"status": "sucesso", "dados_recebidos": data})
 
-# Variável global para armazenar os últimos dados recebidos
-sensor_data = {
-    "media_batimentos": None,
-    "menor_batimento": None,
-    "maior_batimento": None,
-    "pressao_menor_min": None,
-    "pressao_maior_min": None
-}
-
-# Caminho para o arquivo CSV onde os dados serão armazenados
-csv_file_path = './dados_predicao.csv'
-
-# Função para salvar os dados no CSV
-def salvar_no_csv(dados):
-    with open(csv_file_path, mode='a', newline='') as file:  # 'a' para adicionar linhas sem sobrescrever
-        writer = csv.writer(file)
-        
-        # Verifica se o arquivo está vazio para adicionar o cabeçalho
-        if file.tell() == 0:
-            writer.writerow(['media_batimentos', 'menor_batimento', 'maior_batimento', 'pressao_menor_min', 'pressao_maior_min'])
-
-        # Escrever a linha de dados no CSV
-        writer.writerow([
-            dados["media_batimentos"],
-            dados["menor_batimento"],
-            dados["maior_batimento"],
-            dados["pressao_menor_min"],
-            dados["pressao_maior_min"]
-        ])
-
-
-# @app.route('/api/get_dados', methods=['GET'])
-# def get_dados():
-#     return jsonify(sensor_data)
+@app.route('/api/get_dados', methods=['GET'])
+def get_dados():
+    return jsonify(sensor_data)
 
 @app.route('/atualizar_tabela')
 def atualizar_tabela():
@@ -141,35 +110,6 @@ def dados():
 
     return jsonify(resultados)
 
-@app.route('/api/dados', methods=['POST'])
-def receber_dados():
-    global sensor_data
-    data = request.get_json()
-
-    # Extrair os dados do JSON recebido
-    sensor_data["media_batimentos"] = data.get('media_batimentos')
-    sensor_data["menor_batimento"] = data.get('menor_batimento')
-    sensor_data["maior_batimento"] = data.get('maior_batimento')
-    sensor_data["pressao_menor_min"] = data.get('pressao_menor_min')
-    sensor_data["pressao_maior_min"] = data.get('pressao_maior_min')
-
-    print(f"Dados recebidos: {sensor_data}")
-
-    # Salvar os dados no CSV
-    salvar_no_csv(sensor_data)
-
-    return jsonify({"status": "sucesso", "dados_recebidos": sensor_data})
-
-@app.route('/api/get_dados', methods=['GET'])
-def get_dados():
-    return jsonify(sensor_data)
-
-# Endpoint para fazer download do arquivo CSV, caso necessário
-@app.route('/download_csv')
-def download_csv():
-    return send_file(csv_file_path, as_attachment=True)
-
-
 # Renomeie a função para evitar conflito de nomes
 @app.route('/api/dados', methods=['POST'])
 def receber_bpm_uid():
@@ -183,8 +123,5 @@ def receber_bpm_uid():
     return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
 
 
-import os
-
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # Obtém a porta do ambiente ou usa 5000 como padrão
-    app.run(host='0.0.0.0', port=port, debug=True)  # Exponha em 0.0.0.0 para funcionar no Render
+    app.run(debug=True)
