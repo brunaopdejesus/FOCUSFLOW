@@ -1,6 +1,7 @@
 import csv
 import serial
 import time
+import requests
 
 # Inicializa a conexão com a porta serial (modifique a porta conforme necessário)
 ser = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
@@ -8,15 +9,29 @@ ser = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
 # Lista para armazenar os valores de BPM
 bpm_list = []
 
-def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
-    # Caminho do arquivo CSV
-    file_path = './dados_predicao.csv'
+def enviar_dados_para_servidor(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
+    # URL do servidor Flask na nuvem
+    url = "http://35.160.120.126/api/dados"
 
-    # Escrever os dados no arquivo CSV
-    with open(file_path, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['media_batimentos', 'menor_batimento', 'maior_batimento', 'pressao_menor_min', 'pressao_menor_max', 'pressao_maior_min', 'pressao_maior_max'])
-        writer.writerow([media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max])
+    # Dados que serão enviados no formato JSON
+    payload = {
+        "media_batimentos": media_batimentos,
+        "menor_batimento": menor_batimento,
+        "maior_batimento": maior_batimento,
+        "pressao_menor_min": pressao_menor_min,
+        "pressao_menor_max": pressao_menor_max,
+        "pressao_maior_min": pressao_maior_min,
+        "pressao_maior_max": pressao_maior_max
+    }
+
+    try:
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            print(f"Dados enviados com sucesso! Resposta: {response.json()}")
+        else:
+            print(f"Falha ao enviar dados. Status: {response.status_code}, Resposta: {response.text}")
+    except Exception as e:
+        print(f"Erro ao enviar dados: {e}")
 
 # Função principal
 def monitorar_bpm():
@@ -35,20 +50,19 @@ def monitorar_bpm():
                     print(f"BPM capturado: {bpm}")
 
                     # Simular uma captura contínua de BPM por um tempo e, depois, calcular os valores
-                    if len(bpm_list) >= 10:  # Suponha que após 10 valores, você quer salvar
+                    if len(bpm_list) >= 10:  # Após 10 valores, enviar para o servidor
                         media_batimentos = sum(bpm_list) / len(bpm_list)
                         menor_batimento = min(bpm_list)
                         maior_batimento = max(bpm_list)
 
-                        # Definir os valores de pressão arterial (pode modificar conforme necessário)
-                        pressao_menor_min = 80  # Exemplo de pressão
+                        # Valores fictícios de pressão arterial (modifique conforme necessário)
+                        pressao_menor_min = 80
                         pressao_menor_max = 85
                         pressao_maior_min = 120
                         pressao_maior_max = 125
 
-                        # Salvar no CSV
-                        salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
-                        print("Dados salvos no CSV com sucesso!")
+                        # Enviar os dados para o servidor Flask na nuvem
+                        enviar_dados_para_servidor(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
 
                         # Limpar a lista de BPM para capturar novos valores
                         bpm_list.clear()
@@ -58,4 +72,3 @@ def monitorar_bpm():
 
 # Chamar a função principal
 monitorar_bpm()
-
