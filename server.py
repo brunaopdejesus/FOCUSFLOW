@@ -11,11 +11,13 @@ import re
 import os
 import random
 
+
 app = Flask(__name__)
 
 ENV = os.getenv("ENV", "development")
 
 if ENV == "development":
+    import serial
     # Inicializa as conexões seriais no ambiente de desenvolvimento
     ser_smartwatch = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
     ser_circuito = serial.Serial('/dev/cu.HC-05-SPPDev', 9600)
@@ -35,21 +37,6 @@ else:
     ser_circuito = simular_dados_sensores
     print("Ambiente de produção - Simulação ativada.")
 
-# Exemplo de uso
-while True:
-    if ENV == "development":
-        # Leitura real dos dispositivos
-        if ser_smartwatch.in_waiting > 0:
-            dados_smartwatch = ser_smartwatch.readline().decode('utf-8').strip()
-            print(dados_smartwatch)
-    else:
-        # Simulação em produção
-        smartwatch_data = ser_smartwatch()
-        sensor_data = ser_circuito()
-        print(f"Smartwatch: {smartwatch_data}, Sensores: {sensor_data}")
-
-    time.sleep(2)
-
 # Dados globais para os sensores e smartwatch
 sensor_data = {
     "temperature": None,
@@ -65,17 +52,69 @@ smartwatch_data = {
 # Lista para armazenar os valores de BPM
 bpm_list = []
 
-# Inicializa a conexão serial para o smartwatch (ajuste a porta conforme necessário)
-ser_smartwatch = serial.Serial('/dev/cu.usbmodem14201', 115200, timeout=1)
+# Monitoramento dos dados do smartwatch (BPM)
+def monitorar_bpm():
+    while True:
+        if ENV == "development":
+            if ser_smartwatch.in_waiting > 0:
+                linha = ser_smartwatch.readline().decode('utf-8').strip()
+                print(f"Dado recebido: {linha}")
+                try:
+                    if "BPM" in linha:
+                        bpm_data = eval(linha)
+                        bpm = bpm_data['BPM']
+                        uid = bpm_data.get('UID', 'desconhecido')
 
-# Inicializa a conexão serial para o circuito de sensores (Bluetooth HC-05)
-ser_circuito = serial.Serial('/dev/cu.HC-05-SPPDev', 9600)
-ser_circuito.flush()
+                        smartwatch_data['bpm'] = bpm
+                        smartwatch_data['uid'] = uid
+                        bpm_list.append(bpm)
 
-# URL do localhost para onde os dados serão enviados (para simular o envio entre partes do servidor)
-url = "http://localhost:5000/api/dados"
+                        if len(bpm_list) >= 10:
+                            media_batimentos = sum(bpm_list) / len(bpm_list)
+                            menor_batimento = min(bpm_list)
+                            maior_batimento = max(bpm_list)
 
-# Função para salvar BPM e pressão arterial no CSV
+                            pressao_menor_min = 80
+                            pressao_menor_max = 85
+                            pressao_maior_min = 120
+                            pressao_maior_max = 125
+
+                            salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
+                            print("Dados salvos no CSV com sucesso!")
+                            bpm_list.clear()
+                except Exception as e:
+                    print(f"Erro ao processar dados: {e}")
+        else:
+            smartwatch_data = ser_smartwatch()
+            print(f"Simulação - Smartwatch: {smartwatch_data}")
+        time.sleep(1)
+
+# Monitoramento dos dados do circuito de sensores (Bluetooth HC-05)
+def monitorar_sensores():
+    while True:
+        if ENV == "development":
+            if ser_circuito.in_waiting > 0:
+                data = ser_circuito.readline().decode('utf-8').strip()
+                print(f"Dados recebidos: {data}")
+                try:
+                    if "Umidade:" in data and "Temperatura:" in data:
+                        valores = extrair_valor_de_string(data)
+                        sensor_data['humidity'] = float(valores[0])
+                        sensor_data['temperature'] = float(valores[1])
+                    elif "Luminosidade" in data:
+                        valores = extrair_valor_de_string(data)
+                        sensor_data['ldr_value'] = int(valores[0])
+
+                        salvar_dados_csv(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
+                        enviar_dados_para_localhost(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
+                except (IndexError, ValueError) as e:
+                    print(f"Erro ao processar dados: {e}")
+        else:
+            sensor_data = ser_circuito()
+            print(f"Simulação - Sensores: {sensor_data}")
+        time.sleep(2)
+
+# Funções auxiliares (CSV, envio de dados, etc.)
 def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max):
     file_path = './dados_predicao.csv'
     with open(file_path, mode='w', newline='') as file:
@@ -83,72 +122,16 @@ def salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_me
         writer.writerow(['media_batimentos', 'menor_batimento', 'maior_batimento', 'pressao_menor_min', 'pressao_menor_max', 'pressao_maior_min', 'pressao_maior_max'])
         writer.writerow([media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max])
 
-# Monitoramento dos dados do smartwatch (BPM)
-def monitorar_bpm():
-    while True:
-        if ser_smartwatch.in_waiting > 0:
-            linha = ser_smartwatch.readline().decode('utf-8').strip()
-            print(f"Dado recebido: {linha}")
-            try:
-                if "BPM" in linha:
-                    bpm_data = eval(linha)
-                    bpm = bpm_data['BPM']
-                    uid = bpm_data.get('UID', 'desconhecido')
-
-                    smartwatch_data['bpm'] = bpm
-                    smartwatch_data['uid'] = uid
-                    bpm_list.append(bpm)
-
-                    if len(bpm_list) >= 10:
-                        media_batimentos = sum(bpm_list) / len(bpm_list)
-                        menor_batimento = min(bpm_list)
-                        maior_batimento = max(bpm_list)
-
-                        pressao_menor_min = 80
-                        pressao_menor_max = 85
-                        pressao_maior_min = 120
-                        pressao_maior_max = 125
-
-                        salvar_no_csv(media_batimentos, menor_batimento, maior_batimento, pressao_menor_min, pressao_menor_max, pressao_maior_min, pressao_maior_max)
-                        print("Dados salvos no CSV com sucesso!")
-                        bpm_list.clear()
-            except Exception as e:
-                print(f"Erro ao processar dados: {e}")
-        time.sleep(1)
-
-# Função para extrair números de uma string
 def extrair_valor_de_string(data_string):
     return re.findall(r"[-+]?\d*\.\d+|\d+", data_string)
 
-# Monitoramento dos dados do circuito de sensores (Bluetooth HC-05)
-def monitorar_sensores():
-    while True:
-        if ser_circuito.in_waiting > 0:
-            data = ser_circuito.readline().decode('utf-8').strip()
-            print(f"Dados recebidos: {data}")
-            try:
-                if "Umidade:" in data and "Temperatura:" in data:
-                    valores = extrair_valor_de_string(data)
-                    sensor_data['humidity'] = float(valores[0])
-                    sensor_data['temperature'] = float(valores[1])
-                elif "Luminosidade" in data:
-                    valores = extrair_valor_de_string(data)
-                    sensor_data['ldr_value'] = int(valores[0])
-
-                    salvar_dados_csv(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-                    enviar_dados_para_localhost(sensor_data['temperature'], sensor_data['humidity'], sensor_data['ldr_value'])
-            except (IndexError, ValueError) as e:
-                print(f"Erro ao processar dados: {e}")
-        time.sleep(2)
-
-# Função para salvar os dados de sensores em um CSV
 def salvar_dados_csv(temperature, humidity, ldr_value):
     with open('dados_sensores.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), temperature, humidity, ldr_value])
 
-# Função para enviar os dados do circuito de sensores para o servidor
 def enviar_dados_para_localhost(temperature, humidity, ldr_value):
+    url = "http://localhost:5000/api/dados"
     payload = {
         "temperature": temperature,
         "humidity": humidity,
