@@ -8,6 +8,10 @@ import serial
 import time
 import requests
 import re
+import os
+
+# Pega o valor da variável de ambiente ENV ou usa "development" como padrão
+ENV = os.getenv("ENV", "development")
 
 app = Flask(__name__)
 
