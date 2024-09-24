@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard do Funcionário</title>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
     <link rel="icon" href="./ícone/verde_sem_subtitulo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
     <!-- <link rel="stylesheet" href="index.css"> -->
@@ -20,9 +21,7 @@
             <!-- <a href="./index.html"><img src="./ícone/verde_sem_subtitulo.png" alt="Logo"></a>  -->
         </div>
         <div class="nav-links">
-            <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
-            <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
-            <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
+            <a href="{{ url_for('user') }}"><h2>Visão Geral</h2></a>
             <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
         </div>
         <div class="user">
@@ -42,10 +41,6 @@
                 </section>
                 <!-- Seus cards ficam aqui -->
                 <section class="card">
-                    <h2>Batimento Cardíaco</h2>
-                    <div id="heart-rate">-- bpm</div>
-                </section>
-                <section class="card">
                     <h2>Pressão Arterial</h2>
                     <div id="blood-pressure">-- mmHg</div>
                 </section>
@@ -56,6 +51,10 @@
                 <section class="card">
                     <h2>Pedômetro</h2>
                     <div id="step-counter">-- passos</div>
+                </section>
+                <section class="card">
+                    <h2>Batimento Cardíaco</h2>
+                    <div id="heart-rate">-- bpm</div>
                 </section>
                 <section class="card">
                     <h2>Frequência de Pausas</h2>
