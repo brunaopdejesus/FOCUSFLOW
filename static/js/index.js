@@ -1,76 +1,36 @@
 function fetchData() {
-    fetch('./dados_predicao.csv')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n');
-            if (rows.length > 1) {
-                const latestData = rows[1].split(',');
+    const heartRate = Math.floor(Math.random() * (120 - 60 + 1)) + 60;
+    const bloodPressure = `${Math.floor(Math.random() * (140 - 90 + 1)) + 90}/${Math.floor(Math.random() * (90 - 60 + 1)) + 60}`;
+    const bodyTemperature = (Math.random() * (38 - 36) + 36).toFixed(1);
+    const stepCounter = Math.floor(Math.random() * 10000); // Simulando até 10.000 passos
+    const breakFrequency = Math.floor(Math.random() * 10); // Simulando de 0 a 9 pausas
+    const clockIn = `${String(Math.floor(Math.random() * 12)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
+    const clockOut = `${String(Math.floor(Math.random() * 12) + 12).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
 
-                // Usar parseFloat para ler valores decimais corretamente
-                const heartRate = parseFloat(latestData[0]) || 0;
-                
-                // Corrigido: Usar as colunas corretas para a pressão arterial
-                const bloodPressure = `${latestData[5] || 120}/${latestData[6] || 80}`;
+    document.getElementById('heart-rate').textContent = `${heartRate} bpm`;
+    document.getElementById('blood-pressure').textContent = bloodPressure;
+    document.getElementById('body-temperature').textContent = `${bodyTemperature} °C`;
+    document.getElementById('step-counter').textContent = `${stepCounter} passos`;
+    document.getElementById('break-frequency').textContent = `${breakFrequency} pausas`;
+    document.getElementById('clock-in').textContent = clockIn;
+    document.getElementById('clock-out').textContent = clockOut;
 
-                // Outros dados simulados
-                const bodyTemperature = 36.6; // Valor fixo ou variável
-                const stepCounter = Math.floor(Math.random() * 10000); // Simulação de passos
-                const breakFrequency = Math.floor(Math.random() * 10); // Simulação de pausas
-                const clockIn = `${String(Math.floor(Math.random() * 12)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
-                const clockOut = `${String(Math.floor(Math.random() * 12) + 12).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`;
-
-                // Atualizar os elementos na página
-                document.getElementById('heart-rate').textContent = `${heartRate} bpm`;
-                document.getElementById('blood-pressure').textContent = `${bloodPressure} mmHg`;
-                document.getElementById('body-temperature').textContent = `${bodyTemperature} °C`;
-                document.getElementById('step-counter').textContent = `${stepCounter} passos`;
-                document.getElementById('break-frequency').textContent = `${breakFrequency} pausas`;
-                document.getElementById('clock-in').textContent = clockIn;
-                document.getElementById('clock-out').textContent = clockOut;
-
-                // Atualizar o gráfico
-                updateFeedbackChart(heartRate, bloodPressure, bodyTemperature, stepCounter);
-            } else {
-                console.error('CSV não contém dados suficientes.');
-            }
-        })
-        .catch(error => console.error('Erro ao carregar o CSV:', error));
+    // Atualizar o gráfico com novos dados
+    updateFeedbackChart(heartRate, bloodPressure, bodyTemperature, stepCounter);
 }
 
 function updateFeedbackChart(heartRate, bloodPressure, bodyTemperature, stepCounter) {
+    // Atualizando o dataset do gráfico com novos valores
     feedbackChart.data.datasets[0].data.push(heartRate);
     feedbackChart.data.datasets[0].data.shift();
     feedbackChart.data.datasets[1].data.push(parseInt(bloodPressure.split('/')[0]));
     feedbackChart.data.datasets[1].data.shift();
     feedbackChart.data.datasets[2].data.push(parseFloat(bodyTemperature));
     feedbackChart.data.datasets[2].data.shift();
-    feedbackChart.data.datasets[3].data.push(stepCounter / 1000);
+    feedbackChart.data.datasets[3].data.push(stepCounter / 1000); // Convertendo passos para milhar
+    feedbackChart.data.datasets[3].data.shift();
+    
     feedbackChart.update();
-}
-
-function fetchDataFromCSV() {
-    fetch('./dados_predicao.csv')
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n');
-
-            if (rows.length > 1) {
-                const latestData = rows[1].split(',');
-
-                // Corrigido: Usando a coluna correta para 'media_batimentos'
-                const heartRate = parseFloat(latestData[0]); // Coluna para 'media_batimentos'
-                
-                // Corrigido: Usando as colunas corretas para a pressão arterial
-                const bloodPressure = `${latestData[5]}/${latestData[6]}`; // pressao_maior_min/pressao_maior_max
-
-                // Atualizando os elementos no HTML
-                document.getElementById('heart-rate').textContent = `${heartRate} bpm`;
-                document.getElementById('blood-pressure').textContent = `${bloodPressure} mmHg`;
-            } else {
-                console.error('CSV não contém dados suficientes.');
-            }
-        })
-        .catch(error => console.error('Erro ao carregar o CSV:', error));
 }
 
 // Configuração inicial do gráfico
@@ -235,5 +195,4 @@ const productivityWellbeingChart = new Chart(productivityCtx, {
         }
     }
 });
-
 
