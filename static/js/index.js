@@ -196,3 +196,23 @@ const productivityWellbeingChart = new Chart(productivityCtx, {
     }
 });
 
+function showChart(chartId) {
+    // Esconde todos os gráficos
+    const charts = document.querySelectorAll('.feedback-card');
+    charts.forEach(chart => chart.classList.add('hidden'));
+
+    // Exibe o gráfico selecionado
+    const selectedChart = document.getElementById(chartId);
+    if (selectedChart) {
+        selectedChart.classList.remove('hidden');
+    }
+}
+
+// Exemplo de como ativar a função ao clicar nas opções da lista
+document.querySelector('#feedbackOptions').addEventListener('click', (event) => {
+    const target = event.target;
+    if (target.tagName === 'LI') {
+        const chartId = target.getAttribute('data-chart');
+        showChart(chartId);
+    }
+});

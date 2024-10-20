@@ -6,6 +6,10 @@
     --card-background: #f4f4f4; /* Cor de fundo clara para contraste */
 }
 
+.hidden {
+    display: none;
+}
+
 .nome {
     display: flex;
     flex-direction: row;

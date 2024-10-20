@@ -122,6 +122,5 @@ def receber_bpm_uid():
     # Aqui você pode salvar os dados em um banco de dados ou processar como necessário
     return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
 
-
 if __name__ == '__main__':
     app.run(debug=True)
