@@ -216,3 +216,54 @@ document.querySelector('#feedbackOptions').addEventListener('click', (event) => 
         showChart(chartId);
     }
 });
+
+async function carregarDadosSaudeLongoPrazo() {
+    try {
+        const response = await fetch('/dados_saude_longo_prazo');
+        const dados = await response.json();
+
+        // Atualizar o status do funcionário
+        const notificationText = document.getElementById('notificationText');
+        notificationText.textContent = `Nível previsto de saúde a longo prazo: ${dados.previsao_nivel_saude}`;
+
+        // Dados para o gráfico
+        const dadosGrafico = {
+            labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
+            datasets: [{
+                label: `Previsão: ${dados.previsao_nivel_saude}`,
+                data: [
+                    dados.media_batimentos[0],
+                    dados.menor_batimento[0],
+                    dados.maior_batimento[0],
+                    dados.pressao_menor_min[0],
+                    dados.pressao_maior_min[0]
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Configuração do gráfico
+        const config = {
+            type: 'bar',
+            data: dadosGrafico,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        // Renderizando o gráfico
+        const ctx = document.getElementById('graficoSaudeLongoPrazo').getContext('2d');
+        new Chart(ctx, config);
+    } catch (error) {
+        console.error("Erro ao carregar os dados de saúde a longo prazo:", error);
+    }
+}
+
+// Carregar os dados ao carregar a página
+carregarDadosSaudeLongoPrazo();

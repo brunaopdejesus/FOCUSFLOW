@@ -3,9 +3,11 @@ from flask import Flask, jsonify, render_template, request, send_file
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import joblib
+import pickle
 
 app = Flask(__name__)
 
+# Dados do sensor
 sensor_data = {
     "temperature": None,
     "humidity": None,
@@ -19,7 +21,6 @@ def index():
 @app.route('/funcionario/<nome>')
 def funcionario(nome):
     return render_template('funcionario.html', nome=nome)
-
 
 @app.route('/perfil')
 def perfil():
@@ -69,14 +70,14 @@ def get_dados():
 def atualizar_tabela():
     with open('dados_sensores.csv', 'r') as file:
         reader = csv.DictReader(file)
-        dados = list(reader)[-1]  
+        dados = list(reader)[-1]
 
 @app.route('/download')
 def download_file():
     caminho_arquivo = 'dados_sensores.csv' 
     return send_file(caminho_arquivo, as_attachment=True)
 
-@app.route('/dados')
+@app.route('/dados', methods=['GET'])
 def dados():
     # Carregar o modelo treinado
     modelo = joblib.load('modelo.pkl')
@@ -110,7 +111,6 @@ def dados():
 
     return jsonify(resultados)
 
-# Renomeie a função para evitar conflito de nomes
 @app.route('/api/dados', methods=['POST'])
 def receber_bpm_uid():
     data = request.get_json()
@@ -119,7 +119,6 @@ def receber_bpm_uid():
 
     print(f"BPM: {bpm}, UID: {uid}")
 
-    # Aqui você pode salvar os dados em um banco de dados ou processar como necessário
     return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
 
 if __name__ == '__main__':

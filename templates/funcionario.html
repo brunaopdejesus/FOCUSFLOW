@@ -169,23 +169,45 @@
 
         // Carregar os dados e criar o gráfico ao carregar a página
         carregarDados();
-
     </script>
-    <script>
-        async function carregarDadosSaudeLongoPrazo() {
-            try {
-                const response = await fetch('/dados_saude_longo_prazo');
-                const dados = await response.json();
+    <section class="feedback-card hidden" id="productivityWellbeingChart">
+        <h2>Predição de Saúde a Longo Prazo</h2>
+        <canvas id="graficoSaudeLongoPrazo"></canvas>
+    </section>
     
+    <section class="feedback-card hidden" id="productivityWellbeingChart">
+        <h2>Predição de Saúde a Longo Prazo</h2>
+        <canvas id="graficoSaudeLongoPrazo"></canvas>
+    </section>
+    
+    <script>
+        // Função para simular os dados de saúde a longo prazo
+        function gerarDadosSaudeLongoPrazo() {
+            return {
+                previsao_nivel_saude: "Saudável",
+                media_batimentos: [75],  // Média dos batimentos cardíacos
+                menor_batimento: [60],   // Menor valor dos batimentos
+                maior_batimento: [90],   // Maior valor dos batimentos
+                pressao_menor_min: [70], // Pressão mínima (sistólica)
+                pressao_maior_min: [120] // Pressão máxima (diastólica)
+            };
+        }
+    
+        // Função para carregar e exibir os dados no gráfico
+        function carregarDadosSaudeLongoPrazo() {
+            try {
+                // Gerar dados fictícios
+                const dados = gerarDadosSaudeLongoPrazo();
+        
                 // Atualizar o status do funcionário
                 const notificationText = document.getElementById('notificationText');
                 notificationText.textContent = `Nível previsto de saúde a longo prazo: ${dados.previsao_nivel_saude}`;
-    
+        
                 // Dados para o gráfico
                 const dadosGrafico = {
                     labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
                     datasets: [{
-                        label: `Previsão: ${dados.previsao_nivel_saude}`,
+                        label: `Previsão para os 30 dias a frnte: ${dados.previsao_nivel_saude}`,
                         data: [
                             dados.media_batimentos[0],
                             dados.menor_batimento[0],
@@ -198,7 +220,7 @@
                         borderWidth: 1
                     }]
                 };
-    
+        
                 // Configuração do gráfico
                 const config = {
                     type: 'bar',
@@ -211,7 +233,7 @@
                         }
                     }
                 };
-    
+        
                 // Renderizando o gráfico
                 const ctx = document.getElementById('graficoSaudeLongoPrazo').getContext('2d');
                 new Chart(ctx, config);
@@ -219,9 +241,10 @@
                 console.error("Erro ao carregar os dados de saúde a longo prazo:", error);
             }
         }
-    
+        
         // Carregar os dados ao carregar a página
         carregarDadosSaudeLongoPrazo();
     </script>    
+    
 </body>
 </html>
