@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard do Funcionário</title>
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
-    <link rel="icon" href="./ícone/verde_sem_subtitulo.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
     <!-- <link rel="stylesheet" href="index.css"> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap">
@@ -21,7 +20,6 @@
             <!-- <a href="./index.html"><img src="./ícone/verde_sem_subtitulo.png" alt="Logo"></a>  -->
         </div>
         <div class="nav-links">
-            <a href="{{ url_for('user') }}"><h2>Visão Geral</h2></a>
             <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
         </div>
         <div class="user">
@@ -35,7 +33,7 @@
         </div>
         <main>
             <section class="card-container">
-                <section class="feedback-card">
+                <section class="feedback-card-resumo">
                     <h2>Resumo Semanal do Funcionário</h2>
                     <canvas id="feedbackChart"></canvas>
                 </section>
@@ -54,7 +52,7 @@
                 </section>
                 <section class="card">
                     <h2>Batimento Cardíaco</h2>
-                    <div id="heart-rate">-- bpm</div>
+                    <div id="heart-rate">-- bpm</div> 
                 </section>
                 <section class="card">
                     <h2>Frequência de Pausas</h2>
@@ -70,26 +68,29 @@
                 </section>
             </section>
             <aside class="side-container">
+                <div id="statusNotification" class="status-notification">
+                    <div id="notificationText">Status do Funcionário</div>
+                </div>
                 <section class="feedback-list">
                     <h2>Selecione o Gráfico</h2>
                     <ul id="feedbackOptions">
-                        <li onclick="showChart('healthPatternsChart')">Análise Preditiva de Padrões de Saúde</li>
-                        <li onclick="showChart('productivityWellbeingChart')">Análise Preditiva da Produtividade vs. Bem-Estar</li>
+                        <li onclick="showChart('healthPatternsChart')">Análise Preditiva de Estresse Extremo</li>                    
+                    </ul>
+                    <ul id="feedbackOptions">
+                        <li onclick="showChart('productivityWellbeingChart')">Análise Preditiva de Saúde a Longo Prazo</li>                    
                     </ul>
                 </section>
-                <section class="feedback-card">
-                    <h2>Análise Preditiva de Padrões de Saúde</h2>
-                    <canvas id="healthPatternsChart"></canvas>
+                <section class="feedback-card hidden" id="healthPatternsChart">
+                    <h2>Análise Preditiva de Estresse Extremo</h2>
+                    <canvas id="graficoEstresse"></canvas>
                 </section>
-                <section class="feedback-card">
-                    <h2>Análise Preditiva da Produtividade vs. Bem-Estar</h2>
-                    <canvas id="productivityWellbeingChart"></canvas>
-                </section>
+                
+                <section class="feedback-card hidden" id="productivityWellbeingChart">
+                    <h2>Predição de Saúde a Longo Prazo</h2>
+                    <canvas id="graficoSaudeLongoPrazo"></canvas>
+                </section>                               
             </aside>            
         </main>
-        <footer>
-            <p>© 2024 FocusFlow | Todos os direitos reservados.</p>
-        </footer>
     </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     <!-- <script src="index.js"></script> -->
@@ -103,5 +104,144 @@
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
+    <script>
+        async function carregarDados() {
+            try {
+                const response = await fetch('/dados');
+                const dados = await response.json();
+
+                // Atualizar o status do funcionário
+                const notificationText = document.getElementById('notificationText');
+                notificationText.textContent = `O provável nível de estresse extremo do funcionário atualmente é: ${dados.previsao_nivel_estresse}`;
+
+                // Atualizar a cor de fundo com base no nível de estresse
+                const statusNotification = document.getElementById('statusNotification');
+                statusNotification.className = 'status-notification'; // Reseta as classes
+                if (dados.previsao_nivel_estresse === 'Baixo') {
+                    statusNotification.classList.add('status-baixo');
+                } else if (dados.previsao_nivel_estresse === 'Moderado') {
+                    statusNotification.classList.add('status-moderado');
+                } else if (dados.previsao_nivel_estresse === 'Alto') {
+                    statusNotification.classList.add('status-alto');
+                }
+
+                // Dados para o gráfico
+                const dadosGrafico = {
+                    labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
+                    datasets: [{
+                        label: `Nível de Estresse Previsto: ${dados.previsao_nivel_estresse}`,
+                        data: [
+                            dados.media_batimentos[0], 
+                            dados.menor_batimento[0], 
+                            dados.maior_batimento[0], 
+                            dados.pressao_menor_min[0], 
+                            dados.pressao_maior_min[0]
+                        ],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                };
+
+                // Configuração do gráfico
+                const config = {
+                    type: 'bar',
+                    data: dadosGrafico,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                // Renderizando o gráfico
+                const ctx = document.getElementById('graficoEstresse').getContext('2d');
+                new Chart(ctx, config);
+            } catch (error) {
+                console.error("Erro ao carregar os dados:", error);
+            }
+        }
+
+        // Carregar os dados e criar o gráfico ao carregar a página
+        carregarDados();
+    </script>
+    <section class="feedback-card hidden" id="productivityWellbeingChart">
+        <h2>Predição de Saúde a Longo Prazo</h2>
+        <canvas id="graficoSaudeLongoPrazo"></canvas>
+    </section>
+    
+    <section class="feedback-card hidden" id="productivityWellbeingChart">
+        <h2>Predição de Saúde a Longo Prazo</h2>
+        <canvas id="graficoSaudeLongoPrazo"></canvas>
+    </section>
+    
+    <script>
+        // Função para simular os dados de saúde a longo prazo
+        function gerarDadosSaudeLongoPrazo() {
+            return {
+                previsao_nivel_saude: "Saudável",
+                media_batimentos: [75],  // Média dos batimentos cardíacos
+                menor_batimento: [60],   // Menor valor dos batimentos
+                maior_batimento: [90],   // Maior valor dos batimentos
+                pressao_menor_min: [70], // Pressão mínima (sistólica)
+                pressao_maior_min: [120] // Pressão máxima (diastólica)
+            };
+        }
+    
+        // Função para carregar e exibir os dados no gráfico
+        function carregarDadosSaudeLongoPrazo() {
+            try {
+                // Gerar dados fictícios
+                const dados = gerarDadosSaudeLongoPrazo();
+        
+                // Atualizar o status do funcionário
+                const notificationText = document.getElementById('notificationText');
+                notificationText.textContent = `Nível previsto de saúde a longo prazo: ${dados.previsao_nivel_saude}`;
+        
+                // Dados para o gráfico
+                const dadosGrafico = {
+                    labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
+                    datasets: [{
+                        label: `Previsão para os 30 dias a frnte: ${dados.previsao_nivel_saude}`,
+                        data: [
+                            dados.media_batimentos[0],
+                            dados.menor_batimento[0],
+                            dados.maior_batimento[0],
+                            dados.pressao_menor_min[0],
+                            dados.pressao_maior_min[0]
+                        ],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                };
+        
+                // Configuração do gráfico
+                const config = {
+                    type: 'bar',
+                    data: dadosGrafico,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+        
+                // Renderizando o gráfico
+                const ctx = document.getElementById('graficoSaudeLongoPrazo').getContext('2d');
+                new Chart(ctx, config);
+            } catch (error) {
+                console.error("Erro ao carregar os dados de saúde a longo prazo:", error);
+            }
+        }
+        
+        // Carregar os dados ao carregar a página
+        carregarDadosSaudeLongoPrazo();
+    </script>    
+    
 </body>
 </html>
