@@ -21,6 +21,7 @@
         </div>
         <div class="nav-links">
             <a href="{{ url_for('circuito') }}"><h2>Informações do Ambiente</h2></a>
+            <a href="{{ url_for('smartwatch') }}"><h2>Dados do Funcionário</h2></a>
             <a href="{{ url_for('visao_computacional') }}"><h2>Análise de Postura</h2></a>
             <a href="{{ url_for('admin') }}"><h2>Visão Geral</h2></a>
             <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
@@ -41,34 +42,7 @@
                     <canvas id="feedbackChart"></canvas>
                 </section>
                 <!-- Seus cards ficam aqui -->
-                <section class="card">
-                    <h2>Pressão Arterial</h2>
-                    <div id="blood-pressure">-- mmHg</div>
-                </section>
-                <section class="card">
-                    <h2>Temperatura Corporal</h2>
-                    <div id="body-temperature">-- °C</div>
-                </section>
-                <section class="card">
-                    <h2>Pedômetro</h2>
-                    <div id="step-counter">-- passos</div>
-                </section>
-                <section class="card">
-                    <h2>Batimento Cardíaco</h2>
-                    <div id="heart-rate">-- bpm</div> 
-                </section>
-                <section class="card">
-                    <h2>Frequência de Pausas</h2>
-                    <div id="break-frequency">-- pausas</div>
-                </section>
-                <section class="card">
-                    <h2>Horário de Entrada</h2>
-                    <div id="clock-in">--:--</div>
-                </section>
-                <section class="card">
-                    <h2>Horário de Saída</h2>
-                    <div id="clock-out">--:--</div>
-                </section>
+                
             </section>
             <aside class="side-container">
                 <div id="statusNotification" class="status-notification">

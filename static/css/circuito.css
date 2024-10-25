@@ -282,6 +282,7 @@ h1 {
     margin: 0;
 }
 
+
 @media (max-width: 768px) {
     .sensor-box {
         max-width: 90%;
