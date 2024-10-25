@@ -6,24 +6,26 @@
     <title>Dashboard do Funcionário</title>
     <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
-    <!-- <link rel="stylesheet" href="index.css"> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
         <div class="logo">
-            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
-            <!-- <a href="./index.html"><img src="./ícone/verde_sem_subtitulo.png" alt="Logo"></a>  -->
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo">
+            </a>
         </div>
         <div class="nav-links">
             <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
         </div>
         <div class="user">
-            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Logo"></a>
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário">
+            </a>
         </div>
     </header>
     <div class="container">
@@ -38,34 +40,6 @@
                     <canvas id="feedbackChart"></canvas>
                 </section>
                 <!-- Seus cards ficam aqui -->
-                <section class="card">
-                    <h2>Pressão Arterial</h2>
-                    <div id="blood-pressure">-- mmHg</div>
-                </section>
-                <section class="card">
-                    <h2>Temperatura Corporal</h2>
-                    <div id="body-temperature">-- °C</div>
-                </section>
-                <section class="card">
-                    <h2>Pedômetro</h2>
-                    <div id="step-counter">-- passos</div>
-                </section>
-                <section class="card">
-                    <h2>Batimento Cardíaco</h2>
-                    <div id="heart-rate">-- bpm</div> 
-                </section>
-                <section class="card">
-                    <h2>Frequência de Pausas</h2>
-                    <div id="break-frequency">-- pausas</div>
-                </section>
-                <section class="card">
-                    <h2>Horário de Entrada</h2>
-                    <div id="clock-in">--:--</div>
-                </section>
-                <section class="card">
-                    <h2>Horário de Saída</h2>
-                    <div id="clock-out">--:--</div>
-                </section>
             </section>
             <aside class="side-container">
                 <div id="statusNotification" class="status-notification">
@@ -74,26 +48,28 @@
                 <section class="feedback-list">
                     <h2>Selecione o Gráfico</h2>
                     <ul id="feedbackOptions">
-                        <li onclick="showChart('healthPatternsChart')">Análise Preditiva de Estresse Extremo</li>                    
+                        <li onclick="showCharts(['healthPatternsChart'])">Análise Preditiva de Estresse Extremo</li>
                     </ul>
                     <ul id="feedbackOptions">
-                        <li onclick="showChart('productivityWellbeingChart')">Análise Preditiva de Saúde a Longo Prazo</li>                    
+                        <li onclick="showCharts(['productivityWellbeingChart', 'sugestoesPersonalizadas'])">Análise Preditiva de Saúde a Longo Prazo</li>
                     </ul>
                 </section>
                 <section class="feedback-card hidden" id="healthPatternsChart">
                     <h2>Análise Preditiva de Estresse Extremo</h2>
                     <canvas id="graficoEstresse"></canvas>
                 </section>
-                
                 <section class="feedback-card hidden" id="productivityWellbeingChart">
                     <h2>Predição de Saúde a Longo Prazo</h2>
                     <canvas id="graficoSaudeLongoPrazo"></canvas>
-                </section>                               
-            </aside>            
+                </section>
+                <section class="feedback-card hidden" id="sugestoesPersonalizadas">
+                    <h2>Sugestões Personalizadas de Saúde</h2>
+                    <p>Parabéns por manter sua saúde em dia! Continue se exercitando regularmente, tenha uma rotina de sono consistente e se alimente de forma balanceada. Mantenha-se hidratado e pratique atividades de relaxamento para preservar seu bem-estar físico e mental. Pequenas pausas e momentos de lazer também são essenciais para manter o equilíbrio.</p>
+                </section>
+            </aside>
         </main>
     </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-    <!-- <script src="index.js"></script> -->
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
         <div vw-plugin-wrapper>
@@ -167,15 +143,6 @@
         // Carregar os dados e criar o gráfico ao carregar a página
         carregarDados();
     </script>
-    <section class="feedback-card hidden" id="productivityWellbeingChart">
-        <h2>Predição de Saúde a Longo Prazo</h2>
-        <canvas id="graficoSaudeLongoPrazo"></canvas>
-    </section>
-    
-    <section class="feedback-card hidden" id="productivityWellbeingChart">
-        <h2>Predição de Saúde a Longo Prazo</h2>
-        <canvas id="graficoSaudeLongoPrazo"></canvas>
-    </section>
     
     <script>
         // Função para simular os dados de saúde a longo prazo
@@ -189,7 +156,7 @@
                 pressao_maior_min: [120] // Pressão máxima (diastólica)
             };
         }
-    
+        
         // Função para carregar e exibir os dados no gráfico
         function carregarDadosSaudeLongoPrazo() {
             try {
@@ -204,7 +171,7 @@
                 const dadosGrafico = {
                     labels: ['Média Batimentos', 'Menor Batimento', 'Maior Batimento', 'Pressão Menor (Min)', 'Pressão Maior (Min)'],
                     datasets: [{
-                        label: `Previsão para os 30 dias a frnte: ${dados.previsao_nivel_saude}`,
+                        label: `Previsão para os 30 dias à frente: ${dados.previsao_nivel_saude}`,
                         data: [
                             dados.media_batimentos[0],
                             dados.menor_batimento[0],
@@ -220,7 +187,7 @@
         
                 // Configuração do gráfico
                 const config = {
-                    type: 'bar',
+                    type: 'line',
                     data: dadosGrafico,
                     options: {
                         scales: {
@@ -241,7 +208,48 @@
         
         // Carregar os dados ao carregar a página
         carregarDadosSaudeLongoPrazo();
-    </script>    
+    </script>
     
+    <script>
+        // Função para gerar sugestões personalizadas baseadas na análise de saúde
+        function gerarSugestoesBaseadasEmSaude() {
+            const statusSaude = "Saudável"; // Status fictício baseado na análise
+    
+            // Lista de sugestões baseada no status de saúde
+            const sugestoes = {
+                "Saudável": [
+                    "Continue mantendo uma rotina de exercícios físicos regulares."
+                ],
+                "Moderado": [
+                    "Aumente a frequência de exercícios físicos leves, como caminhadas.",
+                    "Pratique técnicas de respiração profunda para reduzir o estresse.",
+                    "Ajuste a postura ao longo do dia para evitar desconforto físico."
+                ],
+                "Alto": [
+                    "Considere consultar um especialista para avaliação de estresse.",
+                    "Reduza a carga de trabalho ou faça pausas mais frequentes.",
+                    "Evite o consumo de cafeína e adote práticas de relaxamento."
+                ]
+            };
+    
+            return sugestoes[statusSaude] || [];
+        }
+    
+        // Função para exibir as sugestões no HTML
+        function carregarSugestoesPersonalizadas() {
+            const listaSugestoes = document.getElementById('listaSugestoes');
+            const sugestoes = gerarSugestoesBaseadasEmSaude();
+    
+            // Adicionar cada sugestão como um item de lista
+            sugestoes.forEach(sugestao => {
+                const item = document.createElement('li');
+                item.textContent = sugestao;
+                listaSugestoes.appendChild(item);
+            });
+        }
+    
+        // Carregar sugestões ao carregar a página
+        carregarSugestoesPersonalizadas();
+    </script>
 </body>
 </html>
