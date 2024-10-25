@@ -3,14 +3,35 @@ from flask import Flask, jsonify, render_template, request, send_file
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import joblib
+import os
 
 app = Flask(__name__)
 
+# Dados dos sensores do circuito
 sensor_data = {
     "temperature": None,
     "humidity": None,
     "ldr_value": None
 }
+
+# Dados do smartwatch
+smartwatch_dados = {
+    "pulse": None,
+    "myo": None,
+    "status_funcionario": None
+}
+
+# Caminho para o arquivo CSV do smartwatch
+csv_smartwatch_path = './dados_smartwatch.csv'
+
+# Função para salvar dados do smartwatch no CSV
+def salvar_no_csv_smartwatch(pulse, status_funcionario, myo):
+    file_exists = os.path.isfile(csv_smartwatch_path)
+    with open(csv_smartwatch_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['pulse', 'status_funcionario', 'myo'])
+        writer.writerow([pulse, status_funcionario, myo])
 
 @app.route('/')
 def index():
@@ -19,7 +40,6 @@ def index():
 @app.route('/funcionario/<nome>')
 def funcionario(nome):
     return render_template('funcionario.html', nome=nome)
-
 
 @app.route('/perfil')
 def perfil():
@@ -49,6 +69,7 @@ def privacidade():
 def visao_computacional():
     return render_template('visao-computacional.html')
 
+# Rota para receber dados do circuito
 @app.route('/api/dados', methods=['POST'])
 def receber_dados():
     global sensor_data
@@ -65,6 +86,26 @@ def receber_dados():
 def get_dados():
     return jsonify(sensor_data)
 
+@app.route('/api/smartwatch_dados', methods=['POST'])
+def receber_dados_smartwatch():
+    dados = request.json
+    print(f"Dados recebidos no POST: {dados}")  # Log para verificar o conteúdo do POST
+    if 'pulse' in dados and 'status_funcionario' in dados and 'myo' in dados:
+        smartwatch_dados['pulse'] = dados['pulse']
+        smartwatch_dados['status_funcionario'] = dados['status_funcionario']
+        smartwatch_dados['myo'] = dados['myo']
+        print(f"Dados armazenados: {smartwatch_dados}")  # Verifique se os dados são armazenados corretamente
+        return jsonify({'message': 'Dados recebidos com sucesso!'}), 200
+    else:
+        print("Dados inválidos recebidos")  # Caso a estrutura dos dados seja errada
+        return jsonify({'error': 'Dados inválidos!'}), 400
+
+
+@app.route('/api/smartwatch_get_dados', methods=['GET'])
+def obter_dados_smartwatch():
+    # Retorna os dados atuais do smartwatch
+    return jsonify(smartwatch_dados), 200
+
 @app.route('/atualizar_tabela')
 def atualizar_tabela():
     with open('dados_sensores.csv', 'r') as file:
@@ -78,27 +119,20 @@ def download_file():
 
 @app.route('/dados')
 def dados():
-    # Carregar o modelo treinado
     modelo = joblib.load('modelo.pkl')
 
-    # Recriar o LabelEncoder com os dados do dataset
     file_path = './dataset_estresse_variante.csv'
     data = pd.read_csv(file_path)
 
-    # Codificar a coluna 'nivel_estresse'
     label_encoder = LabelEncoder()
     label_encoder.fit(data['nivel_estresse'])
 
-    # Carregar os novos dados para prever
     novo_dado = pd.read_csv('./dados_predicao.csv')
 
-    # Fazer a previsão com o modelo carregado
     previsao_novo_dado = modelo.predict(novo_dado)
 
-    # Decodificar a previsão
     nivel_estresse_previsto = label_encoder.inverse_transform(previsao_novo_dado)[0]
 
-    # Criar um dicionário com os resultados
     resultados = {
         "previsao_nivel_estresse": nivel_estresse_previsto,
         "media_batimentos": novo_dado['media_batimentos'].tolist(),
@@ -109,19 +143,6 @@ def dados():
     }
 
     return jsonify(resultados)
-
-# Renomeie a função para evitar conflito de nomes
-# @app.route('/api/dados', methods=['POST'])
-# def receber_bpm_uid():
-#     data = request.get_json()
-#     bpm = data.get('BPM')
-#     uid = data.get('UID')
-
-#     print(f"BPM: {bpm}, UID: {uid}")
-
-#     # Aqui você pode salvar os dados em um banco de dados ou processar como necessário
-#     return jsonify({"status": "sucesso", "BPM": bpm, "UID": uid})
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
