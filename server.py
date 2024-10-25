@@ -153,44 +153,5 @@ def dados():
 
     return jsonify(resultados)
 
-# @app.route('/dadosModeloSujestões')
-# def dados():
-#     # Carregar o modelo treinado e gerar previsões
-#     modelo = joblib.load('modeloNotificacao.pkl')
-#     data = pd.read_csv('./dataset_estresse_variante.csv')
-#     label_encoder = LabelEncoder()
-#     label_encoder.fit(data['nivel_estresse'])
- 
-#     novo_dado = pd.read_csv('./dadosNotificacao.csv')
-#     previsao_novo_dado = modelo.predict(novo_dado)
-#     nivel_estresse_previsto = label_encoder.inverse_transform(previsao_novo_dado)[0]
- 
-#     # Lógica de sugestões personalizadas
-#     sugestoes = []
-#     if nivel_estresse_previsto == 'Alto':
-#         sugestoes.append("Recomenda-se uma pausa e alongamento.")
-#         sugestoes.append("Verificar as condições de trabalho para mais conforto.")
-#     elif nivel_estresse_previsto == 'Moderado':
-#         sugestoes.append("Realizar algumas respirações profundas.")
-#         sugestoes.append("Considere um breve descanso.")
-#     else:
-#         sugestoes.append("Continue com o ótimo trabalho!")
-#         sugestoes.append("Siga o fluxo normal do dia.")
- 
-#     # Criar um dicionário com os resultados
-#     resultados = {
-#         "previsao_nivel_estresse": nivel_estresse_previsto,
-#         "media_batimentos": novo_dado['media_batimentos'].tolist(),
-#         "menor_batimento": novo_dado['menor_batimento'].tolist(),
-#         "maior_batimento": novo_dado['maior_batimento'].tolist(),
-#         "pressao_menor_min": novo_dado['pressao_menor_min'].tolist(),
-#         "pressao_maior_min": novo_dado['pressao_maior_min'].tolist(),
-#         "sugestoes": sugestoes  # Adicionar as sugestões ao JSON de resposta
-#     }
- 
-#     return jsonify(resultados)
-
-
-
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
