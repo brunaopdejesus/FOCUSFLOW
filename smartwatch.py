@@ -6,7 +6,7 @@ import json
 import re
 
 # Inicializa a conexão com a porta serial (modifique a porta conforme necessário)
-ser = serial.Serial('/dev/tty.usbmodem14201', 9600, timeout=1)
+ser = serial.Serial('/dev/tty.usbmodem14101', 9600, timeout=1)
 
 # Lista para armazenar os valores de BPM
 bpm_list = []

@@ -6,7 +6,7 @@ import re
 
 # Configuração da porta serial (Arduino)
 try:
-    arduino = serial.Serial('/dev/tty.usbmodem14101', 9600)
+    arduino = serial.Serial('/dev/tty.usbmodem14201', 9600)
     print("Conexão com o Arduino estabelecida com sucesso.")
 except Exception as e:
     print(f"Erro ao conectar ao Arduino: {e}")
