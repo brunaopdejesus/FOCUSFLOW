@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/circuito.css') }}">
+    <title>Dados Vitais - Funcionário</title>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/verde_sem_subtitulo.png') }}" alt="Logo"></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('user_smartwatch') }}"><h2>Dados do Funcionário</h2></a>
+            <a href="{{ url_for('user') }}"><h2>Visão Geral</h2></a>
+            <a href="{{ url_for('perfil') }}"><h2>Perfil</h2></a>
+        </div>
+        <div class="user">
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='ícone/pessoa.jpg') }}" alt="Usuário"></a>
+        </div>
+    </header>
+    <h1>Dados do Funcionário</h1>
+
+    <div class="sensor-data">
+        <div class="sensor-box">
+            <h2>BPM</h2>
+            <p id="pulse">--</p>
+        </div>
+        <div class="sensor-box">
+            <h2>Status</h2>
+            <p id="status_funcionario">--</p>
+        </div>
+        <div class="sensor-box">
+            <h2>Contração Muscular</h2>
+            <p id="myo">--</p>
+        </div>
+    </div>
+
+    <div class="download-btn">
+        <!-- Atualização do href para a rota correta -->
+        <a href="/download_smartwatch" download>
+            <button>
+                Baixar Relatório CSV
+            </button>
+        </a>
+    </div>
+
+    <script>
+        // Variáveis para armazenar os valores anteriores
+        let previousPulse = null;
+        let previousStatus = null;
+        let previousMyo = null;
+    
+        function fetchSensorData() {
+            fetch('/api/smartwatch_get_dados')
+                .then(response => response.json())
+                .then(data => {
+                    // Verifica se os valores mudaram
+                    if (data.pulse !== previousPulse || data.status_funcionario !== previousStatus || data.myo !== previousMyo) {
+                        // Atualiza os elementos com os novos dados
+                        document.getElementById('pulse').textContent = data.pulse ? `${data.pulse} BPM` : '--';
+                        document.getElementById('status_funcionario').textContent = data.status_funcionario ? data.status_funcionario : '--';
+                        document.getElementById('myo').textContent = data.myo ? data.myo : '--';
+    
+                        // Salva os novos valores
+                        previousPulse = data.pulse;
+                        previousStatus = data.status_funcionario;
+                        previousMyo = data.myo;
+                    }
+                })
+                .catch(error => console.error('Erro ao buscar dados:', error));
+        }
+    
+        // Configura a atualização para cada 6 segundos
+        setInterval(fetchSensorData, 3000);
+        fetchSensorData();
+    </script>
+</body>
+</html>

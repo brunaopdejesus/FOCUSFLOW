@@ -53,6 +53,10 @@ def circuito():
 def smartwatch():
     return render_template('smartwatch.html')
 
+@app.route('/user_smartwatch')
+def user_smartwatch():
+    return render_template('user-smartwatch.html')
+
 @app.route('/termos')
 def termos():
     return render_template('termos_de_servico.html')
